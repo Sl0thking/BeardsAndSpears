@@ -1,6 +1,6 @@
 package de.sloth.spearSystems;
 
-import de.sloth.components.SlothComp;
+import de.sloth.component.SlothComp;
 import de.sloth.system.game.collision.CollisionEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;

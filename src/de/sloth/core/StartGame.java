@@ -1,7 +1,7 @@
 package de.sloth.core;
 
 import de.sloth.component.ScoreComp;
-import de.sloth.components.SlothComp;
+import de.sloth.component.SlothComp;
 import de.sloth.entity.Entity;
 import de.sloth.hmi.PlayerStatusLayer;
 import de.sloth.system.game.core.GameEvent;
