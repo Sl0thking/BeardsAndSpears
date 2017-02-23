@@ -48,7 +48,7 @@ public class PlayerStatusLayer extends GameInterfaceLayer {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				lifeBox.getChildren().clear();
 				for(int i = 0; i < newValue.intValue(); i++) {
-					lifeBox.getChildren().add(new ImageView(new Image("file:./sprites/health_potion.png")));
+					lifeBox.getChildren().add(new ImageView(new Image("file:./sprites/images/health_potion.png")));
 				}
 			}
 		});

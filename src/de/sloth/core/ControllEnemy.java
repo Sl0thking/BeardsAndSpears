@@ -20,9 +20,8 @@ public class ControllEnemy implements IBehavior {
 		Random rand = new Random();
 		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), SlothEnemyComp.class);
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
-		if(enemies.size() < 3) {
-			int nenemy = rand.nextInt(200);
-			//System.out.println("GEN ENEMY");
+		if(enemies.size() < 6) {
+			int nenemy = rand.nextInt(100);
 			if(nenemy == 0) {
 				Direction direct = Direction.RIGHT;
 				boolean isLeft = rand.nextBoolean();
@@ -42,7 +41,7 @@ public class ControllEnemy implements IBehavior {
 					direct = Direction.LEFT;
 				}
 				system.getEventQueue().add(new PossibleMoveEvent(enemy, direct));
-				int throwSpear = rand.nextInt(50);
+				int throwSpear = rand.nextInt(35);
 				if(throwSpear == 0) {
 					system.getEventQueue().add(new ThrowSpearEvent(enemy));
 				}
@@ -54,9 +53,5 @@ public class ControllEnemy implements IBehavior {
 	}
 
 	@Override
-	public void execute(GameSystem system, GameEvent expectedEvent) {
-		// TODO Auto-generated method stub
-
-	}
-
+	public void execute(GameSystem system, GameEvent expectedEvent) {}
 }

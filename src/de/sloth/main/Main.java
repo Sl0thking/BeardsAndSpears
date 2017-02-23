@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import de.sloth.system.game.core.GameCore;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.IEntityManagement;
+import de.sloth.system.hmi.SpriteLoader;
 import de.sloth.core.EntityManager;
 import de.sloth.core.GameSystemGenerator;
 import de.sloth.core.StartGameEvent;
@@ -26,7 +27,10 @@ public class Main extends Application {
 		int canvasHeight = 480;
 		int canvasLayers = 4;
 		IEntityManagement entityManager = new EntityManager();
-		HMICore gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers);
+		String[] aniPhaseNames = {"idle"};
+		int aniPhases = 4;
+		SpriteLoader spl = SpriteLoader.getInstance(2.0, 32, 32, aniPhases, aniPhaseNames);
+		HMICore gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers, spl);
 		
 		Scene scene = new Scene(gameHmi);
 		primaryStage.setScene(scene);

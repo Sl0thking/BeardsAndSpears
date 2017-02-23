@@ -1,5 +1,6 @@
 package de.sloth.core;
 
+import de.sloth.component.AnimationComp;
 import de.sloth.component.FocusComp;
 import de.sloth.component.HitboxComp;
 import de.sloth.component.MovableComp;
@@ -13,14 +14,12 @@ import de.sloth.system.game.flying.FlyingComp;
 import de.sloth.system.game.moveSystem.Direction;
 
 public class EntityGenerator {
-	
 	private static EntityGenerator instance;
 	private static final int CANVAS_WIDTH = 640;
 	private static final int CANVAS_HEIGTH = 480;
 	private static final int SPRITE_WIDTH = 32;
 	private static final int SPRITE_HEIGHT = 32;
 	private static final double SCALING = 2.;
-	
 	
 	private EntityGenerator() {}
 	
@@ -31,14 +30,14 @@ public class EntityGenerator {
 		return instance;
 	}
 	
-	
 	public Entity generateEnemy(Direction direction) {
 		Entity enemy = new Entity();
 		enemy.setId(-1);
 		enemy.setName("Viking");
 		Position3DComp posComp = new Position3DComp();
-		MovableComp mComp = new MovableComp(16);
+		MovableComp mComp = new MovableComp(16, Direction.RIGHT);
 		HitboxComp hitcomp = new HitboxComp(32, 32);
+		//AnimationComp aniComp = new AnimationComp("idle", 0, 20);
 		if(direction.equals(Direction.LEFT)) {
 			posComp.setX((int) (SPRITE_WIDTH*SCALING));
 			posComp.setY((int) (SPRITE_HEIGHT*SCALING));
@@ -52,6 +51,7 @@ public class EntityGenerator {
 		enemy.addComponent(new SlothEnemyComp());
 		enemy.addComponent(mComp);
 		enemy.addComponent(hitcomp);
+		//enemy.addComponent(aniComp);
 		return enemy;
 	}
 	
@@ -60,13 +60,14 @@ public class EntityGenerator {
 		sloth.setName("Sloth");
 		sloth.setId(-1);
 		Position3DComp posComp = new Position3DComp();
-		MovableComp mComp = new MovableComp(8);
+		MovableComp mComp = new MovableComp(8, Direction.LEFT);
 		HitboxComp hbox = new HitboxComp(32, 32);
 		SlothComp scomp = new SlothComp(0,5);
 		ScoreComp scoreComp = new ScoreComp(0);
+		AnimationComp aniComp = new AnimationComp("idle", 0, 15);
 		posComp.setY(CANVAS_HEIGTH-(int) (SPRITE_HEIGHT*SCALING));
 		FocusComp fComp = new FocusComp();
-		SpriteComp sComp = new SpriteComp("Viking_right.png");
+		SpriteComp sComp = new SpriteComp("Viking_sheet");
 		sloth.addComponent(posComp);
 		sloth.addComponent(fComp);
 		sloth.addComponent(sComp);
@@ -74,6 +75,7 @@ public class EntityGenerator {
 		sloth.addComponent(mComp);
 		sloth.addComponent(scomp);
 		sloth.addComponent(scoreComp);
+		sloth.addComponent(aniComp);
 		return sloth;
 	}
 	
@@ -82,8 +84,9 @@ public class EntityGenerator {
 		spear.setId(-1);
 		Position3DComp throwPosComp = (Position3DComp) thrower.getComponent(Position3DComp.class);
 		Position3DComp spearPosComp = new Position3DComp();
-		HitboxComp hitbox = new HitboxComp(16,32);
-		spearPosComp.setX(throwPosComp.getX());
+		HitboxComp hitbox = new HitboxComp(14,32);
+		spearPosComp.setX(throwPosComp.getX()+10);
+		//AnimationComp aniComp = new AnimationComp("idle", 0, 20);
 		Direction direct = Direction.TOP;
 		SpriteComp spComp = new SpriteComp("spear.png");
 		if(thrower.getComponent(FocusComp.class) == null) {
@@ -94,12 +97,13 @@ public class EntityGenerator {
 			spComp = new SpriteComp("spear_backward.png");
 		}
 		FlyingComp flyComp = new FlyingComp(500, direct);
-		MovableComp movComp = new MovableComp(2);
+		MovableComp movComp = new MovableComp(2, Direction.TOP);
 		spear.addComponent(flyComp);
 		spear.addComponent(movComp);
 		spear.addComponent(spearPosComp);
 		spear.addComponent(spComp);
 		spear.addComponent(hitbox);
+		//spear.addComponent(aniComp);
 		return spear; 
 		
 	}
