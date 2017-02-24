@@ -1,6 +1,6 @@
 package de.sloth.spearSystems;
 
-import de.sloth.component.SlothComp;
+import de.sloth.components.SpearBagComp;
 import de.sloth.core.EntityGenerator;
 import de.sloth.entity.Entity;
 import de.sloth.system.game.core.GameEvent;
@@ -17,7 +17,7 @@ public class ThrowSpear implements IBehavior {
 		ThrowSpearEvent tse = (ThrowSpearEvent) expectedEvent;
 		if(tse.getThrowingEntity() == null) {
 			Entity sloth = system.getEntityManager().getActivePlayabaleEntity();
-			SlothComp scomp = (SlothComp) sloth.getComponent(SlothComp.class);
+			SpearBagComp scomp = (SpearBagComp) sloth.getComponent(SpearBagComp.class);
 			if(scomp.getSpears() > 0) {
 				system.getEntityManager().addEntity(EntityGenerator.getInstance().generateFlyingSpear(sloth));
 				scomp.setSpears(scomp.getSpears()-1);

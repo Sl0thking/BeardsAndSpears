@@ -20,6 +20,7 @@ import de.sloth.system.game.collision.commonBehavior.DamagePlayer;
 import de.sloth.system.game.collision.commonBehavior.Deglitch;
 import de.sloth.system.game.collision.commonBehavior.Despawn;
 import de.sloth.system.game.controlls.ControllSystem;
+import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameCore;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
@@ -108,7 +109,8 @@ public class GameSystemGenerator {
 	public GameSystem generateBGMSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem bgmSystem = new GameSystem("bgmSys", null, entityManager, eventQueue);
 		bgmSystem.registerBehavior("Any", new PlaySong());
-		//bgmSystem.setActive(false);
+		boolean musicOn = Boolean.valueOf(ConfigLoader.getInstance().getConfig("bgm", "true"));
+		bgmSystem.setActive(musicOn);
 		return bgmSystem;
 	}
 
@@ -120,6 +122,12 @@ public class GameSystemGenerator {
 		cSys.registerKey(KeyCode.D, new PossibleMoveEvent(Direction.RIGHT));
 		cSys.registerKey(KeyCode.F, new ThrowSpearEvent());
 		return cSys;
+	}
+	
+	public GameSystem generateControllPlayerNNSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
+		GameSystem enemyControllSystem = new GameSystem("ctrlPlayerNN", null, entityManager, eventQueue);
+		enemyControllSystem.registerBehavior("Any", new ControllPlayerNN());
+		return enemyControllSystem;
 	}
 	
 	public GameSystem generateEnemyControllSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
@@ -138,5 +146,28 @@ public class GameSystemGenerator {
 		GameSystem flyingSpearSystem = new GameSystem("throwSpearCtrl", ThrowSpearEvent.class, entityManager, eventQueue);
 		flyingSpearSystem.registerBehavior("Any", new ThrowSpear());
 		return flyingSpearSystem;
+	}
+
+	public GameSystem generateEndConditionSystem(IEntityManagement entityManager,
+			ConcurrentLinkedQueue<GameEvent> eventQueue) {
+		GameSystem endConditionSystem = new GameSystem("endCondition", null, entityManager, eventQueue);
+		endConditionSystem.registerBehavior("Any", new CheckForDeath());
+		endConditionSystem.setActive(false);
+		return endConditionSystem;
+	}
+	
+	public GameSystem generateEndConditionNNSystem(IEntityManagement entityManager,
+			ConcurrentLinkedQueue<GameEvent> eventQueue) {
+		GameSystem endConditionSystem = new GameSystem("endCondition", null, entityManager, eventQueue);
+		endConditionSystem.registerBehavior("Any", new CheckForDeathNN());
+		endConditionSystem.setActive(false);
+		return endConditionSystem;
+	}
+
+	public GameSystem generateStartGameSystemNN(IEntityManagement entityManager,
+			ConcurrentLinkedQueue<GameEvent> eventQueue) {
+		GameSystem startGameSystem = new GameSystem("startGame", StartGameEvent.class, entityManager, eventQueue);
+		startGameSystem.registerBehavior("Any", new StartGameNN());
+		return startGameSystem;
 	}
 }

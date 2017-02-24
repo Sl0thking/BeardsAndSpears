@@ -2,14 +2,17 @@ package de.sloth.core;
 
 import de.sloth.component.AnimationComp;
 import de.sloth.component.FocusComp;
+import de.sloth.component.HealthComp;
 import de.sloth.component.HitboxComp;
 import de.sloth.component.MovableComp;
 import de.sloth.component.Position3DComp;
 import de.sloth.component.ScoreComp;
-import de.sloth.component.SlothComp;
 import de.sloth.component.SpriteComp;
+import de.sloth.components.NeuralNetworkComp;
 import de.sloth.components.SlothEnemyComp;
+import de.sloth.components.SpearBagComp;
 import de.sloth.entity.Entity;
+import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.flying.FlyingComp;
 import de.sloth.system.game.moveSystem.Direction;
 
@@ -20,8 +23,11 @@ public class EntityGenerator {
 	private static final int SPRITE_WIDTH = 32;
 	private static final int SPRITE_HEIGHT = 32;
 	private static final double SCALING = 2.;
+	private ConfigLoader cl;
 	
-	private EntityGenerator() {}
+	private EntityGenerator() {
+		this.cl = ConfigLoader.getInstance("valHal.properties");
+	}
 	
 	public static EntityGenerator getInstance() {
 		if(instance == null) {
@@ -56,13 +62,17 @@ public class EntityGenerator {
 	}
 	
 	public Entity generatePlayer() {
+		int playerLife = Integer.parseInt(cl.getConfig("playerLife", "5"));
+		int playerSpears = Integer.parseInt(cl.getConfig("playerSpears", "0"));
+		int playerSpeed = Integer.parseInt(cl.getConfig("playerSpeed", "8"));
 		Entity sloth = new Entity();
 		sloth.setName("Sloth");
 		sloth.setId(-1);
 		Position3DComp posComp = new Position3DComp();
-		MovableComp mComp = new MovableComp(8, Direction.LEFT);
+		MovableComp mComp = new MovableComp(playerSpeed, Direction.LEFT);
 		HitboxComp hbox = new HitboxComp(32, 32);
-		SlothComp scomp = new SlothComp(0,5);
+		HealthComp heComp = new HealthComp(playerLife);
+		SpearBagComp spComp = new SpearBagComp(playerSpears);
 		ScoreComp scoreComp = new ScoreComp(0);
 		AnimationComp aniComp = new AnimationComp("idle", 0, 15);
 		posComp.setY(CANVAS_HEIGTH-(int) (SPRITE_HEIGHT*SCALING));
@@ -73,13 +83,15 @@ public class EntityGenerator {
 		sloth.addComponent(sComp);
 		sloth.addComponent(hbox);
 		sloth.addComponent(mComp);
-		sloth.addComponent(scomp);
+		sloth.addComponent(heComp);
+		sloth.addComponent(spComp);
 		sloth.addComponent(scoreComp);
 		sloth.addComponent(aniComp);
 		return sloth;
 	}
 	
 	public Entity generateFlyingSpear(Entity thrower) {
+		int spearSpeed = Integer.parseInt(cl.getConfig("spearSpeed", "4"));
 		Entity spear = new Entity();
 		spear.setId(-1);
 		Position3DComp throwPosComp = (Position3DComp) thrower.getComponent(Position3DComp.class);
@@ -97,14 +109,21 @@ public class EntityGenerator {
 			spComp = new SpriteComp("spear_backward.png");
 		}
 		FlyingComp flyComp = new FlyingComp(500, direct);
-		MovableComp movComp = new MovableComp(2, Direction.TOP);
+		MovableComp movComp = new MovableComp(spearSpeed, Direction.TOP);
 		spear.addComponent(flyComp);
 		spear.addComponent(movComp);
 		spear.addComponent(spearPosComp);
 		spear.addComponent(spComp);
 		spear.addComponent(hitbox);
-		//spear.addComponent(aniComp);
 		return spear; 
 		
+	}
+
+	public Entity generateNNEntity() {
+		Entity nnEntity = new Entity();
+		nnEntity.setId(-1);
+		NeuralNetworkComp nnComp = new NeuralNetworkComp(Integer.parseInt(ConfigLoader.getInstance().getConfig("nnIterations", "10")));
+		nnEntity.addComponent(nnComp);
+		return nnEntity;
 	}
 }
