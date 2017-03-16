@@ -1,6 +1,7 @@
-package de.sloth.core;
+package de.sloth.core.neuralNetwork;
 
 import de.sloth.component.HealthComp;
+import de.sloth.component.ScoreComp;
 import de.sloth.components.NeuralNetworkComp;
 import de.sloth.entity.Entity;
 import de.sloth.system.game.core.GameEvent;
@@ -15,15 +16,13 @@ public class CheckForDeathNN implements IBehavior {
 		Entity nnEntity = ((NNEntityManager) system.getEntityManager()).getNNInformation();
 		HealthComp hComp = (HealthComp) player.getComponent(HealthComp.class);
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnEntity.getComponent(NeuralNetworkComp.class);
+		ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);
 		if(hComp.getLifes() == 0) {
 			System.out.println("DIED...");
-			nnComp.setIterations(nnComp.getIterations()-1);
-			if(nnComp.getIterations() > 0) {
-				system.getEventQueue().add(new StartGameEvent());
-			} else {
-				System.out.println("Played: " + nnComp.getIterations() + " times.");
-				System.exit(0);
-			}
+			nnComp.getNetwork().getSequence().setFitnessLvl(scComp.getScoreProperty().intValue());
+			system.getEventQueue().add(new GeneticalEvent("CheckOrMutate"));
+		} else {
+			scComp.getScoreProperty().set(scComp.getScore()+1);
 		}
 	}
 

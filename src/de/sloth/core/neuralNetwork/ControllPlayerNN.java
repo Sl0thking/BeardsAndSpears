@@ -1,6 +1,8 @@
-package de.sloth.core;
+package de.sloth.core.neuralNetwork;
 
+import de.sloth.components.NeuralNetworkComp;
 import de.sloth.components.SpearBagComp;
+import de.sloth.core.INeuralNetwork;
 import de.sloth.entity.Entity;
 import de.sloth.spearSystems.ThrowSpearEvent;
 import de.sloth.system.game.core.GameEvent;
@@ -13,10 +15,12 @@ public class ControllPlayerNN implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {
+		NNEntityManager nnMan = (NNEntityManager) system.getEntityManager();
+		INeuralNetwork nn = ((NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class)).getNetwork();
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
 		if(player != null) {
 			SpearBagComp spComp = (SpearBagComp) player.getComponent(SpearBagComp.class);
-			double commandValue = Math.random();
+			double commandValue = nn.processInput();
 			if(commandValue < 0.29) {
 				system.getEventQueue().add(new PossibleMoveEvent(Direction.LEFT));
 			} else if(commandValue > 0.29 && commandValue < 0.65 && spComp.getSpears() > 0) {

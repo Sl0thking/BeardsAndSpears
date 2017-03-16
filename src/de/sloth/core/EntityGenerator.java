@@ -122,7 +122,8 @@ public class EntityGenerator {
 	public Entity generateNNEntity() {
 		Entity nnEntity = new Entity();
 		nnEntity.setId(-1);
-		NeuralNetworkComp nnComp = new NeuralNetworkComp(Integer.parseInt(ConfigLoader.getInstance().getConfig("nnIterations", "10")));
+		int population = 4; //get from prop in future
+		NeuralNetworkComp nnComp = new NeuralNetworkComp(Integer.parseInt(ConfigLoader.getInstance().getConfig("nnGenerations", "5")), new DummyNetwork(), population);
 		nnEntity.addComponent(nnComp);
 		return nnEntity;
 	}

@@ -1,8 +1,9 @@
-package de.sloth.core;
+package de.sloth.core.neuralNetwork;
 
 import java.util.List;
 
 import de.sloth.components.NeuralNetworkComp;
+import de.sloth.core.EntityManager;
 import de.sloth.entity.Entity;
 
 public class NNEntityManager extends EntityManager {

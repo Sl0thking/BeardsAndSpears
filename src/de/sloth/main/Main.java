@@ -10,8 +10,9 @@ import de.sloth.system.hmi.SpriteLoader;
 import de.sloth.core.EntityGenerator;
 import de.sloth.core.EntityManager;
 import de.sloth.core.GameSystemGenerator;
-import de.sloth.core.NNEntityManager;
 import de.sloth.core.StartGameEvent;
+import de.sloth.core.neuralNetwork.GeneticalEvent;
+import de.sloth.core.neuralNetwork.NNEntityManager;
 import de.sloth.hmi.HMICore;
 import de.sloth.hmi.PlayerStatusLayer;
 import javafx.application.Application;
@@ -33,9 +34,11 @@ public class Main extends Application {
 		if(isKiControlled) {
 			entityManager = new NNEntityManager();
 			entityManager.addEntity(EntityGenerator.getInstance().generateNNEntity());
+			core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystemNN(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
-			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystemNN(entityManager, eventQueue));
+
 		} else {
 			int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
 			int screenHeight = (int) Screen.getPrimary().getBounds().getHeight(); 
@@ -73,6 +76,7 @@ public class Main extends Application {
 		core.registerSystem(GameSystemGenerator.getInstance().generateThrowSpearSystem(entityManager, eventQueue));
 		
 		core.start();
+		eventQueue.add(new GeneticalEvent("Init"));
 		eventQueue.add(new StartGameEvent());
 	}
 

@@ -7,6 +7,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import de.sloth.component.FocusComp;
 import de.sloth.components.SlothEnemyComp;
+import de.sloth.core.neuralNetwork.CheckForDeathNN;
+import de.sloth.core.neuralNetwork.ControllPlayerNN;
+import de.sloth.core.neuralNetwork.EvaluateOrMutate;
+import de.sloth.core.neuralNetwork.GeneticalEvent;
+import de.sloth.core.neuralNetwork.InitPopulation;
+import de.sloth.core.neuralNetwork.StartGameNN;
 import de.sloth.hmi.HMICore;
 import de.sloth.spearSystems.CollectSpear;
 import de.sloth.spearSystems.ControllSpear;
@@ -169,5 +175,13 @@ public class GameSystemGenerator {
 		GameSystem startGameSystem = new GameSystem("startGame", StartGameEvent.class, entityManager, eventQueue);
 		startGameSystem.registerBehavior("Any", new StartGameNN());
 		return startGameSystem;
+	}
+	
+	public GameSystem generateGeneticalSystem(IEntityManagement entityManager,
+			ConcurrentLinkedQueue<GameEvent> eventQueue) {
+		GameSystem genSystem = new GameSystem("genSys", GeneticalEvent.class, entityManager, eventQueue);
+		genSystem.registerBehavior("Init", new InitPopulation());
+		genSystem.registerBehavior("CheckOrMutate", new EvaluateOrMutate());
+		return genSystem;
 	}
 }

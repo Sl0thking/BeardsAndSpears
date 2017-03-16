@@ -1,5 +1,6 @@
-package de.sloth.core;
+package de.sloth.core.neuralNetwork;
 
+import de.sloth.core.EntityGenerator;
 import de.sloth.entity.Entity;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
