@@ -8,6 +8,7 @@ import de.sloth.core.INeuralNetwork;
 
 public class NeuralNetworkComp extends Component {
 	private int generations;
+	private int currGen;
 	private INeuralNetwork network;
 	private List<NetworkSequence> population;
 	private int maxPopSize;
@@ -16,6 +17,7 @@ public class NeuralNetworkComp extends Component {
 	public NeuralNetworkComp(int generations, INeuralNetwork network, int maxPopSize) {
 		super();
 		this.generations = generations;
+		this.currGen = 0;
 		this.network = network;
 		this.setPopulation(new ArrayList<NetworkSequence>());
 		this.setMaxPopSize(maxPopSize);
@@ -55,5 +57,13 @@ public class NeuralNetworkComp extends Component {
 	
 	public void addPopulation(NetworkSequence sequence) {
 		this.population.add(sequence);
+	}
+
+	public int getCurrGen() {
+		return currGen;
+	}
+
+	public void setCurrGen(int currGen) {
+		this.currGen = currGen;
 	}
 }

@@ -20,4 +20,9 @@ public class DummyNetwork implements INeuralNetwork {
 	public NetworkSequence getSequence() {
 		return this.nSeq;
 	}
+
+	@Override
+	public int getEdgeCount() {
+		return 8;
+	}
 }

@@ -1,7 +1,10 @@
 package de.sloth.core.neuralNetwork;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import de.sloth.components.NetworkSequence;
 import de.sloth.components.NeuralNetworkComp;
@@ -29,18 +32,46 @@ public class EvaluateOrMutate implements IBehavior {
 		NNEntityManager nnMan = (NNEntityManager) system.getEntityManager();
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class);
 		List<NetworkSequence> pop = nnComp.getPopulation();
-		System.out.println(pop);
-		NetworkSequence nnSeq = getUnratedSequence(pop);
-		if(nnSeq == null) {
-			Object[] generation = pop.toArray();
-			Arrays.sort(generation);
-			for(Object o : generation) {
-				System.out.println((NetworkSequence) o);
+		NetworkSequence[] eval_gen = evaluate(system, nnComp, pop);
+		if(eval_gen != null) {
+			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
+			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
+				NetworkSequence[] comb_gen = combine(eval_gen);
+				NetworkSequence[] mutate_gen = mutate(comb_gen);
+				NetworkSequence[] next_gen = fillGeneration(mutate_gen);
+				nnComp.setPopulation(Arrays.asList(next_gen));
+				system.getEventQueue().add(new GeneticalEvent("Init"));
 			}
-			System.exit(0);
-		} else {
+		}
+	}
+	
+	private NetworkSequence[] fillGeneration(NetworkSequence[] mutate_gen) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private NetworkSequence[] mutate(NetworkSequence[] comb_gen) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private NetworkSequence[] combine(NetworkSequence[] eval_gen) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * Evaluate given population
+	 */
+	private NetworkSequence[] evaluate(GameSystem system, NeuralNetworkComp nnComp, List<NetworkSequence> pop) {
+		NetworkSequence nnSeq = getUnratedSequence(pop);
+		if(nnSeq != null) {
 			nnComp.getNetwork().setSequence(nnSeq);
 			system.getEventQueue().add(new StartGameEvent());
+			return null;
 		}
+		NetworkSequence[] generation = (NetworkSequence[]) pop.toArray();
+		Arrays.sort(generation);
+		return generation;
 	}
 }
