@@ -12,7 +12,7 @@ import de.sloth.system.game.core.IBehavior;
 /**
  * Class for initializing a start population
  */
-public class InitPopulation implements IBehavior{
+public class FillPopulation implements IBehavior{
 
 	@Override
 	public void execute(GameSystem arg0) {}

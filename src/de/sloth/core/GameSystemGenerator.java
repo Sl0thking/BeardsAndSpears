@@ -11,7 +11,7 @@ import de.sloth.core.neuralNetwork.CheckForDeathNN;
 import de.sloth.core.neuralNetwork.ControllPlayerNN;
 import de.sloth.core.neuralNetwork.EvaluateOrMutate;
 import de.sloth.core.neuralNetwork.GeneticalEvent;
-import de.sloth.core.neuralNetwork.InitPopulation;
+import de.sloth.core.neuralNetwork.FillPopulation;
 import de.sloth.core.neuralNetwork.StartGameNN;
 import de.sloth.hmi.HMICore;
 import de.sloth.spearSystems.CollectSpear;
@@ -180,7 +180,7 @@ public class GameSystemGenerator {
 	public GameSystem generateGeneticalSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem genSystem = new GameSystem("genSys", GeneticalEvent.class, entityManager, eventQueue);
-		genSystem.registerBehavior("Init", new InitPopulation());
+		genSystem.registerBehavior("Init", new FillPopulation());
 		genSystem.registerBehavior("CheckOrMutate", new EvaluateOrMutate());
 		return genSystem;
 	}
