@@ -1,6 +1,5 @@
-package de.sloth.core;
+package de.sloth.components;
 
-import de.sloth.components.NetworkSequence;
 
 public interface INeuralNetwork {
 

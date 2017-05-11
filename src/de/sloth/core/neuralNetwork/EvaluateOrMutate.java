@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
-
 import de.sloth.components.NetworkSequence;
 import de.sloth.components.NeuralNetworkComp;
 import de.sloth.core.StartGameEvent;
@@ -34,16 +32,23 @@ public class EvaluateOrMutate implements IBehavior {
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		Object[] eval_gen = evaluate(system, nnComp, pop);
 		if(eval_gen != null) {
+			for(Object o : eval_gen) {
+				System.out.println(o);
+			}
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
 			System.out.println("Curr Gen: " + nnComp.getCurrGen());
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
+				System.out.println("Combine and mutate...");
 				Object[] cleaned_eval_gen = new NetworkSequence[nnComp.getMaxPopSize() / 2];
-				for(int i = 0; i < 2; i++) {
-					cleaned_eval_gen[i] = eval_gen[i];
+				for(int i = 2; i < 4; i++) {
+					cleaned_eval_gen[i-2] = eval_gen[i];
 				}
 				NetworkSequence[] comb_gen = combine(Arrays.copyOf(cleaned_eval_gen, cleaned_eval_gen.length, NetworkSequence[].class));
 				NetworkSequence[] mutate_gen = mutate(comb_gen);
 				List<NetworkSequence> newPop = new LinkedList<NetworkSequence>(Arrays.asList(mutate_gen));
+				for(NetworkSequence seq : newPop) {
+					System.out.println(seq);
+				}
 				nnComp.setPopulation(newPop);
 				system.getEventQueue().add(new GeneticalEvent("Init"));
 			} else {
@@ -57,10 +62,10 @@ public class EvaluateOrMutate implements IBehavior {
 		for(NetworkSequence n : comb_gen) {
 			for(int i = 0; i < n.getSequence().toCharArray().length; i++) {
 				if(Math.random() < mutateChance) {
-					if(bit == '0') {
-						n.setSequence(n.getSequence().substring(0, n.getSequence().indexOf(ch)));
+					if(n.getSequence().toCharArray()[i] == '0') {
+						n.setSequence(n.getSequence().substring(0, i) + "1" + n.getSequence().substring(i+1, n.getSequence().toCharArray().length));
 					} else {
-					
+						n.setSequence(n.getSequence().substring(0, i) + "0" + n.getSequence().substring(i+1, n.getSequence().toCharArray().length));
 					}
 				}
 			}

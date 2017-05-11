@@ -36,7 +36,8 @@ public class FillPopulation implements IBehavior{
 		for(int i = 0; i < edges; i++) {
 			String edgeSeq = Integer.toBinaryString(rand.nextInt(128));
 			if(edgeSeq.length() < 7) {
-				for(int x = 0; x < (7-edgeSeq.length()); x++) {
+				int zeroFillCount = 7-edgeSeq.length();
+				for(int x = 0; x < zeroFillCount; x++) {
 					edgeSeq = "0" + edgeSeq;
 				}
 			}

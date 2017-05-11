@@ -8,6 +8,7 @@ import de.sloth.component.MovableComp;
 import de.sloth.component.Position3DComp;
 import de.sloth.component.ScoreComp;
 import de.sloth.component.SpriteComp;
+import de.sloth.components.DummyNetwork;
 import de.sloth.components.NeuralNetworkComp;
 import de.sloth.components.SlothEnemyComp;
 import de.sloth.components.SpearBagComp;

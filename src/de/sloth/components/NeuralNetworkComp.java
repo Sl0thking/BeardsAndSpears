@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.sloth.component.Component;
-import de.sloth.core.INeuralNetwork;
 
 public class NeuralNetworkComp extends Component {
 	private int generations;

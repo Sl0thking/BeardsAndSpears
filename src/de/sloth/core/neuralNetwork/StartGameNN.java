@@ -16,7 +16,6 @@ public class StartGameNN implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system, GameEvent arg1) {
-		System.out.println("START GAME INIT...");
 		system.getEntityManager().clear();
 		Entity player = EntityGenerator.getInstance().generatePlayer();
 		system.getEntityManager().addEntity(player);

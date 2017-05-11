@@ -29,13 +29,14 @@ public class Render implements IBehavior {
 			SpriteComp sprite = (SpriteComp) renderingEntity.getComponent(SpriteComp.class);
 			AnimationComp aniComp = (AnimationComp) renderingEntity.getComponent(AnimationComp.class);
 			MovableComp mvComp = (MovableComp) renderingEntity.getComponent(MovableComp.class);
-			int z_c = comp.getZ();
-			int y_c = comp.getY();
-			int x_c = comp.getX();
-			int transformedPosY = screenHeight-y_c;
-			int transformedPosX = x_c;
-			if(transformedPosX >= 0 && transformedPosX < screenWidth &&
-			   transformedPosY >= 0 && transformedPosY < screenHeight) {
+			if(comp != null) {
+				int z_c = comp.getZ();
+				int y_c = comp.getY();
+				int x_c = comp.getX();
+				int transformedPosY = screenHeight-y_c;
+				int transformedPosX = x_c;
+				if(transformedPosX >= 0 && transformedPosX < screenWidth &&
+						transformedPosY >= 0 && transformedPosY < screenHeight) {
 					if(aniComp != null) {
 						hmiSys.getGameHMI().getCanvas().getLayer(z_c).drawSprite(sprite.getSpritePath() + "_" + mvComp.getDirection().toString().toLowerCase() + ".png_" + aniComp.getAnimationPhase() + "_" + aniComp.getPhaseNr(), transformedPosX, transformedPosY);
 						aniComp.setTicksForNextPhase(aniComp.getTicksForNextPhase()-1);
@@ -49,6 +50,7 @@ public class Render implements IBehavior {
 					} else {
 						hmiSys.getGameHMI().getCanvas().getLayer(z_c).drawSprite(sprite.getSpritePath(), transformedPosX, transformedPosY);
 					}
+				}
 			}
 		}
 	}

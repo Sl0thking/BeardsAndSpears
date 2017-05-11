@@ -28,7 +28,7 @@ public class Main extends Application {
 		ConfigLoader.getInstance("valHal.properties");
 		ConcurrentLinkedQueue<GameEvent> eventQueue = new ConcurrentLinkedQueue<GameEvent>();
 		boolean isKiControlled = Boolean.valueOf(ConfigLoader.getInstance().getConfig("isKi", "false"));
-		
+		boolean showGui = Boolean.valueOf(ConfigLoader.getInstance().getConfig("showGui", "false"));
 		IEntityManagement entityManager = new EntityManager();
 		GameCore core = new GameCore();
 		if(isKiControlled) {
@@ -38,8 +38,9 @@ public class Main extends Application {
 			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystemNN(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
-
-		} else {
+		} 
+		
+		if(showGui) {
 			int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
 			int screenHeight = (int) Screen.getPrimary().getBounds().getHeight(); 
 			int canvasWidth = 640;
@@ -50,22 +51,25 @@ public class Main extends Application {
 			int aniPhases = 4;
 			SpriteLoader spl = SpriteLoader.getInstance(2.0, 32, 32, aniPhases, aniPhaseNames);
 			HMICore gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers, spl);
-			
-			//initate controlls
-			gameHmi.registerGameInterfaceLayer(new PlayerStatusLayer(eventQueue));
 			Scene scene = new Scene(gameHmi);
+			
+			gameHmi.registerGameInterfaceLayer(new PlayerStatusLayer(eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
-			gameHmi.getCanvas().setOnKeyPressed(GameSystemGenerator.getInstance().generateGameControllSystem(entityManager, eventQueue));
-			gameHmi.getCanvas().requestFocus();
-			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionSystem(entityManager, eventQueue));
-			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
-			core.registerSystem(GameSystemGenerator.getInstance().generateBGMSystem(entityManager, eventQueue));
+			if(!isKiControlled) {
+				//initate controlls
+				gameHmi.getCanvas().setOnKeyPressed(GameSystemGenerator.getInstance().generateGameControllSystem(entityManager, eventQueue));
+				gameHmi.getCanvas().requestFocus();
+				core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionSystem(entityManager, eventQueue));
+				core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
+				core.registerSystem(GameSystemGenerator.getInstance().generateBGMSystem(entityManager, eventQueue));
+			}
 			primaryStage.setScene(scene);
 			primaryStage.setFullScreen(true);
 			primaryStage.setFullScreenExitHint("");
 			primaryStage.setAlwaysOnTop(true);
 			primaryStage.show();
 		}
+
 		core.registerSystem(GameSystemGenerator.getInstance().generateSystemActivationSystem(entityManager, core, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateCheckCollisionSystem(entityManager, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateCollisionSystem(entityManager, eventQueue));

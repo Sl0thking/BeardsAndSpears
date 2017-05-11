@@ -18,7 +18,6 @@ import de.sloth.spearSystems.CollectSpear;
 import de.sloth.spearSystems.ControllSpear;
 import de.sloth.spearSystems.ThrowSpear;
 import de.sloth.spearSystems.ThrowSpearEvent;
-import de.sloth.system.game.bgmSystem.PlaySong;
 import de.sloth.system.game.collision.CheckCollision;
 import de.sloth.system.game.collision.CollisionEvent;
 import de.sloth.system.game.collision.CollisionHandleSystem;
@@ -36,6 +35,7 @@ import de.sloth.system.game.moveSystem.Direction;
 import de.sloth.system.game.moveSystem.Move;
 import de.sloth.system.game.moveSystem.MoveEvent;
 import de.sloth.system.game.moveSystem.PossibleMoveEvent;
+import de.sloth.system.game.soundSystem.PlayBgm;
 import de.sloth.system.game.systemActivation.ActivateAllSystems;
 import de.sloth.system.game.systemActivation.ActivateSystem;
 import de.sloth.system.game.systemActivation.GameCoreSystem;
@@ -114,7 +114,7 @@ public class GameSystemGenerator {
 	
 	public GameSystem generateBGMSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem bgmSystem = new GameSystem("bgmSys", null, entityManager, eventQueue);
-		bgmSystem.registerBehavior("Any", new PlaySong());
+		bgmSystem.registerBehavior("Any", new PlayBgm());
 		boolean musicOn = Boolean.valueOf(ConfigLoader.getInstance().getConfig("bgm", "true"));
 		bgmSystem.setActive(musicOn);
 		return bgmSystem;
