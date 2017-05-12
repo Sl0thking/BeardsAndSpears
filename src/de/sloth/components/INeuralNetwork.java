@@ -7,6 +7,6 @@ public interface INeuralNetwork {
 	public void setSequence(NetworkSequence nnSeq);
 	public NetworkSequence getSequence();
 	public int getEdgeCount();
-	public void setInputOfNode();
+	public void setInputOfNode(double input, String nodeId) throws Exception;
 
 }
