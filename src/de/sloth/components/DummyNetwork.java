@@ -24,4 +24,7 @@ public class DummyNetwork implements INeuralNetwork {
 	public int getEdgeCount() {
 		return 8;
 	}
+
+	@Override
+	public void setInputOfNode(double input, String nodeId) throws Exception {}
 }

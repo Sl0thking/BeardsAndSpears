@@ -20,7 +20,7 @@ public class ControllEnemy implements IBehavior {
 		Random rand = new Random();
 		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), SlothEnemyComp.class);
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
-		if(enemies.size() < 6) {
+		if(enemies.size() < 5) {
 			int nenemy = rand.nextInt(100);
 			if(nenemy == 0) {
 				Direction direct = Direction.RIGHT;

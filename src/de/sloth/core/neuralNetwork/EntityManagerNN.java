@@ -6,10 +6,10 @@ import de.sloth.components.NeuralNetworkComp;
 import de.sloth.core.EntityManager;
 import de.sloth.entity.Entity;
 
-public class NNEntityManager extends EntityManager {
+public class EntityManagerNN extends EntityManager {
 	private Entity NNInformation;
 
-	public NNEntityManager() {
+	public EntityManagerNN() {
 		super();
 		NNInformation = null;
 	}

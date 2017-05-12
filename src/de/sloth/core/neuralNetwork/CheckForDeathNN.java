@@ -13,7 +13,7 @@ public class CheckForDeathNN implements IBehavior {
 	@Override
 	public void execute(GameSystem system) {
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
-		Entity nnEntity = ((NNEntityManager) system.getEntityManager()).getNNInformation();
+		Entity nnEntity = ((EntityManagerNN) system.getEntityManager()).getNNInformation();
 		HealthComp hComp = (HealthComp) player.getComponent(HealthComp.class);
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnEntity.getComponent(NeuralNetworkComp.class);
 		ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);

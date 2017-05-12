@@ -20,7 +20,7 @@ public class FillPopulation implements IBehavior{
 	@Override
 	public void execute(GameSystem system, GameEvent arg1) {
 		System.out.println("TRIGGERED");
-		NNEntityManager nnMan = (NNEntityManager) system.getEntityManager();
+		EntityManagerNN nnMan = (EntityManagerNN) system.getEntityManager();
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class);
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		while(nnComp.getMaxPopSize() - nnComp.getPopulation().size() != 0) {

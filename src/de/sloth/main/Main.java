@@ -12,7 +12,7 @@ import de.sloth.core.EntityManager;
 import de.sloth.core.GameSystemGenerator;
 import de.sloth.core.StartGameEvent;
 import de.sloth.core.neuralNetwork.GeneticalEvent;
-import de.sloth.core.neuralNetwork.NNEntityManager;
+import de.sloth.core.neuralNetwork.EntityManagerNN;
 import de.sloth.hmi.HMICore;
 import de.sloth.hmi.PlayerStatusLayer;
 import javafx.application.Application;
@@ -32,10 +32,10 @@ public class Main extends Application {
 		IEntityManagement entityManager = new EntityManager();
 		GameCore core = new GameCore();
 		if(isKiControlled) {
-			entityManager = new NNEntityManager();
+			entityManager = new EntityManagerNN();
+			//check if is learning mode
 			entityManager.addEntity(EntityGenerator.getInstance().generateNNEntity());
 			core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
-			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystemNN(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
 		} 
@@ -55,12 +55,12 @@ public class Main extends Application {
 			
 			gameHmi.registerGameInterfaceLayer(new PlayerStatusLayer(eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
 			if(!isKiControlled) {
 				//initate controlls
 				gameHmi.getCanvas().setOnKeyPressed(GameSystemGenerator.getInstance().generateGameControllSystem(entityManager, eventQueue));
 				gameHmi.getCanvas().requestFocus();
 				core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionSystem(entityManager, eventQueue));
-				core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
 				core.registerSystem(GameSystemGenerator.getInstance().generateBGMSystem(entityManager, eventQueue));
 			}
 			primaryStage.setScene(scene);
@@ -69,7 +69,7 @@ public class Main extends Application {
 			primaryStage.setAlwaysOnTop(true);
 			primaryStage.show();
 		}
-
+		
 		core.registerSystem(GameSystemGenerator.getInstance().generateSystemActivationSystem(entityManager, core, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateCheckCollisionSystem(entityManager, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateCollisionSystem(entityManager, eventQueue));

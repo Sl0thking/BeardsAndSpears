@@ -22,15 +22,18 @@ public class StartGame implements IBehavior {
 	@Override
 	public void execute(GameSystem system, GameEvent expectedEvent) {
 		system.getEntityManager().clear();
-		HMIGameSystem hmiSystem = (HMIGameSystem) system;
-		PlayerStatusLayer psl = (PlayerStatusLayer) hmiSystem.getGameHMI().getGameInterfaceLayer("psl");
 		Entity player = EntityGenerator.getInstance().generatePlayer();
-		HealthComp heComp = (HealthComp) player.getComponent(HealthComp.class);
-		SpearBagComp spComp = (SpearBagComp) player.getComponent(SpearBagComp.class);
-		ScoreComp scoreComp = (ScoreComp) player.getComponent(ScoreComp.class);
-		psl.getLifeProperty().bind(heComp.getLifeProperty());
-		psl.getSpearProperty().bind(spComp.getSpearProperty());
-		psl.getScoreLabel().textProperty().bind(new SimpleStringProperty("Ruhm ").concat(scoreComp.getScoreProperty().asString()));
+		if(Boolean.valueOf(ConfigLoader.getInstance().getConfig("showGui", "false"))) {
+			HMIGameSystem hmiSystem = (HMIGameSystem) system;
+			PlayerStatusLayer psl = (PlayerStatusLayer) hmiSystem.getGameHMI().getGameInterfaceLayer("psl");
+			
+			HealthComp heComp = (HealthComp) player.getComponent(HealthComp.class);
+			SpearBagComp spComp = (SpearBagComp) player.getComponent(SpearBagComp.class);
+			ScoreComp scoreComp = (ScoreComp) player.getComponent(ScoreComp.class);
+			psl.getLifeProperty().bind(heComp.getLifeProperty());
+			psl.getSpearProperty().bind(spComp.getSpearProperty());
+			psl.getScoreLabel().textProperty().bind(new SimpleStringProperty("Ruhm ").concat(scoreComp.getScoreProperty().asString()));
+		}
 		system.getEntityManager().addEntity(player);
 		int enemyCount = Integer.parseInt(ConfigLoader.getInstance().getConfig("enemyCount", "1"));
 		for(int i = 0; i < enemyCount; i++) {

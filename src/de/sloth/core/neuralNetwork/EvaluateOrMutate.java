@@ -27,7 +27,7 @@ public class EvaluateOrMutate implements IBehavior {
 	
 	@Override
 	public void execute(GameSystem system, GameEvent event) {
-		NNEntityManager nnMan = (NNEntityManager) system.getEntityManager();
+		EntityManagerNN nnMan = (EntityManagerNN) system.getEntityManager();
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class);
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		Object[] eval_gen = evaluate(system, nnComp, pop);
@@ -52,6 +52,7 @@ public class EvaluateOrMutate implements IBehavior {
 				nnComp.setPopulation(newPop);
 				system.getEventQueue().add(new GeneticalEvent("Init"));
 			} else {
+				
 				System.exit(0);
 			}
 		}
