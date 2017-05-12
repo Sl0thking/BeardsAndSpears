@@ -7,5 +7,6 @@ public interface INeuralNetwork {
 	public void setSequence(NetworkSequence nnSeq);
 	public NetworkSequence getSequence();
 	public int getEdgeCount();
+	public void setInputOfNode();
 
 }
