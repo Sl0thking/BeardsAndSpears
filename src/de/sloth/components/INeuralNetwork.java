@@ -3,7 +3,7 @@ package de.sloth.components;
 
 public interface INeuralNetwork {
 
-	public double processInput();
+	public double processInput() throws Exception;
 	public void setSequence(NetworkSequence nnSeq);
 	public NetworkSequence getSequence();
 	public int getEdgeCount();
