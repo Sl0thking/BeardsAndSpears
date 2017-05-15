@@ -85,16 +85,19 @@ public class Graph {
 	}
 	
 	public Node getNode(String nodeId) throws Exception {
-		for (Node node : this.nodeMap.keySet()) {
-			if (node.getNodeId().equals(nodeId)) {
-				return node;
-			}
+		try {
+            return (Node) this.getNodeMap().get(nodeId);
+		} catch (Exception ex){
+			throw new Exception("None Node Found!");
 		}
-		throw new Exception("None Node Found!");
 	}
 	
 	public Set<Node> getNodes() {
 		return this.nodeMap.keySet();
+	}
+
+	public TreeMap getNodeMap(){
+		return this.nodeMap;
 	}
 	
 	public double getSumOfEdges() {
