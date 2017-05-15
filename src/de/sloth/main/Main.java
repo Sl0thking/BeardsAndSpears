@@ -1,5 +1,6 @@
 package de.sloth.main;
 
+import java.io.File;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.sloth.system.game.core.ConfigLoader;
@@ -7,6 +8,7 @@ import de.sloth.system.game.core.GameCore;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.IEntityManagement;
 import de.sloth.system.hmi.SpriteLoader;
+import de.sloth.components.NeuralNetworkComp;
 import de.sloth.core.EntityGenerator;
 import de.sloth.core.EntityManager;
 import de.sloth.core.GameSystemGenerator;
@@ -34,7 +36,21 @@ public class Main extends Application {
 		if(isKiControlled) {
 			entityManager = new EntityManagerNN();
 			//check if is learning mode
+			int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
+			File archiveFile = new File(".\\learn_archive_" + learnArchiveID);
+			ConfigLoader.getInstance().setConfigFile(archiveFile.getAbsolutePath() + "\\learn.properties");
+			if(!archiveFile.exists()) {
+				archiveFile.mkdir();
+				new File(archiveFile.getAbsolutePath() + "\\teached_population").mkdir();
+				new File(archiveFile.getAbsolutePath() + "\\replay").mkdir();
+			}
 			entityManager.addEntity(EntityGenerator.getInstance().generateNNEntity());
+			NeuralNetworkComp nnComp = (NeuralNetworkComp) IEntityManagement.filterEntitiesByComponent(entityManager.getAllEntities(), NeuralNetworkComp.class);
+			if(Boolean.valueOf(ConfigLoader.getInstance().getConfig("isLearning", "false"))) {
+				//
+			} else {
+				//
+			}
 			core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
