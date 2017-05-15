@@ -108,15 +108,16 @@ public class Graph {
 		return edge_sum;
 	}
 
-	public List<Edge> getEdges() {
-		ArrayList<Edge> edges = new ArrayList<Edge>();
+	public Set<Edge> getEdges() {
+		return this.edgeSet;
+		/*ArrayList<Edge> edges = new ArrayList<Edge>();
 		for (Node node : this.getNodes()) {
 			for (Edge edge : this.nodeMap.get(node)) {
 				edges.add(edge);
 			}
 		}
 		edges.sort(Edge::compareTo);
-		return edges;
+		return edges;*/
 	}
 
 	private List<Edge> getEdgesOfNode(String nodeId) {
@@ -135,7 +136,7 @@ public class Graph {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for (Edge edge : getEdges()) {
 			if(edge.getEndNode().getNodeId().equals(nodeId)){
-				edges.add(edge);				
+				edges.add(edge);
 			}
 		}
 		return edges;
@@ -146,7 +147,7 @@ public class Graph {
 		String str = "";
 		for (Node node : this.getNodes()) {
 			str += node.toString()+"\n";
-			for (Edge edge : getEdgesOfNode(node.getNodeId())) {
+			for (Edge edge : this.getEdgesOfNode(node.getNodeId())) {
 				str += "  "+edge.getEdgeId()+" - "+edge.getEndNode().toString()+"\n";
 			}
 		}
@@ -200,7 +201,7 @@ public class Graph {
 	
 	public Set<Node> getNodesOfType(NodeType nodeType){
 		TreeSet<Node> nodes = new TreeSet<Node>();
-		for (Node node : getNodes()) {
+		for (Node node : this.getNodes()) {
 			if (node.getNodeType() == nodeType) {
 				nodes.add(node);
 			}
@@ -209,7 +210,7 @@ public class Graph {
 	}
 
 	public void connectInputNodesToHiddenLayer() {
-		for (Node node : getNodesOfType(NodeType.INPUT)) {
+		for (Node node : this.getNodesOfType(NodeType.INPUT)) {
 			for (Node othernode : hiddenLayer.firstEntry().getValue()) {
 				this.addEdge(node.getNodeId(), othernode.getNodeId(), 1);
 			}
@@ -217,7 +218,7 @@ public class Graph {
 	}
 	
 	public void connectHiddenNodesToOutputNodes() {
-		for (Node othernode : getNodesOfType(NodeType.OUTPUT)) {
+		for (Node othernode : this.getNodesOfType(NodeType.OUTPUT)) {
 			for (Node node : hiddenLayer.lastEntry().getValue()) {
 				this.addEdge(node.getNodeId(), othernode.getNodeId(), 1);
 			}
@@ -275,11 +276,11 @@ public class Graph {
 	 */
 	public double calculateInputsOfNode(String nodeId) throws Exception{
 		//System.out.println("LOOK FOR INPUTS OF NODE: "+nodeId);
-		List<Edge> edges = getInputEdgesOfNode(nodeId);
+		List<Edge> edges = this.getInputEdgesOfNode(nodeId);
 		double edgeSum = 0;
 		for (Edge edge : edges) {
 			if (edge.getEdgeType() == EdgeType.FORWARD) {
-				//System.out.println(" "+edge.toString());
+				System.out.println(" "+edge.toString());
 				edgeSum += edge.getStartNode().getValue()*edge.getValue();
 			}
 		}
@@ -300,8 +301,8 @@ public class Graph {
 	}
 
 	public Set<Node> getSigmoidNodes() {
-		Set<Node> nodes = getNodesOfType(NodeType.HIDDEN);
-		nodes.addAll(getNodesOfType(NodeType.OUTPUT));
+		Set<Node> nodes = this.getNodesOfType(NodeType.HIDDEN);
+		nodes.addAll(this.getNodesOfType(NodeType.OUTPUT));
 		return nodes;
 	}
 	

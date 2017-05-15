@@ -55,7 +55,7 @@ public class Controller implements INeuralNetwork {
 
 	@Override
 	public double processInput() throws Exception {
-		Set<Node> sigmoids = this.graph.getSigmoidNodes();
+		Set<Node> sigmoids = this.getGraph().getSigmoidNodes();
 		for (Node node : sigmoids) {
 			try {
 				double sigmoidCalculation = this.getGraph().calculateInputsOfNode(node.getNodeId());
@@ -69,7 +69,7 @@ public class Controller implements INeuralNetwork {
 
 	@Override
 	public void setSequence(NetworkSequence nnSeq) {
-		List<Edge> edges = this.getGraph().getEdges();
+		Set<Edge> edges = this.getGraph().getEdges();
 		String seq = nnSeq.getSequence();
 		int i = 0;
 		for (Edge edge : edges) {
@@ -82,7 +82,7 @@ public class Controller implements INeuralNetwork {
 	@Override
 	public NetworkSequence getSequence() {
 		String seq = "";
-		List<Edge> edges = this.getGraph().getEdges();
+		Set<Edge> edges = this.getGraph().getEdges();
 		for (Edge edge : edges) {
 			/*System.out.println(edge.getValue());
 			System.out.println((int)(edge.getValue()*127));
