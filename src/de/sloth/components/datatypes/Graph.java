@@ -88,7 +88,7 @@ public class Graph {
 		try {
             return (Node) this.getNodeMap().get(nodeId);
 		} catch (Exception ex){
-			throw new Exception("None Node Found!");
+			throw new Exception("Node ["+nodeId+"] Found!");
 		}
 	}
 	

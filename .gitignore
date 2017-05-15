@@ -57,3 +57,13 @@ Temporary Items
 BeardsAndSpears.iml
 *.class
 *.classpath
+
+.idea/libraries/slothengine_20170511.xml
+
+*.class
+
+bin/de/sloth/components/NetworkSequence.class
+
+bin/de/sloth/components/NetworkSequence.class
+
+bin/de/sloth/components/NetworkSequence.class
