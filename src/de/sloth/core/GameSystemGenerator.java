@@ -90,7 +90,7 @@ public class GameSystemGenerator {
 	
 	public GameSystem generateCollisionSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		CollisionHandleSystem collSystem = new CollisionHandleSystem("collSys", CollisionEvent.class, entityManager, eventQueue);
-		collSystem.registerCollisionBehavior(FocusComp.class, FlyingComp.class, new CollectSpear());
+		collSystem.registerCollisionBehavior(FocusComp.class, FlyingComp.class, new CollectSpearPoints());
 		collSystem.registerCollisionBehavior(FlyingComp.class, FocusComp.class, new DamagePlayer());
 		collSystem.registerCollisionBehavior(SlothEnemyComp.class, SlothEnemyComp.class, new Deglitch());
 		collSystem.registerCollisionBehavior(FlyingComp.class, SlothEnemyComp.class, new KillEnemy());
@@ -183,5 +183,12 @@ public class GameSystemGenerator {
 		genSystem.registerBehavior("Init", new FillPopulation());
 		genSystem.registerBehavior("CheckOrMutate", new EvaluateOrMutate());
 		return genSystem;
+	}
+	
+	public GameSystem generateScoreSystem(IEntityManagement entityManager,
+			ConcurrentLinkedQueue<GameEvent> eventQueue) {
+		GameSystem scoreSystem = new GameSystem("scoreSys", CalcScoreEvent.class, entityManager, eventQueue);
+		scoreSystem.registerBehavior("CalcScore", new CalcScore());
+		return scoreSystem;
 	}
 }

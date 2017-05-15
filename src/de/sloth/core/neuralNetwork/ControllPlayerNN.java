@@ -31,22 +31,26 @@ public class ControllPlayerNN implements IBehavior {
 			//check environ and give network input of entities
 			double commandValue;
 			try {
+				//System.out.println(((NeuralNetwork) nn).getGraph().toStringNodeType(NodeType.INPUT, false));
 				nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(player), "n_1");
 				for(int i = 0; i < enemies.size(); i++) {
-					nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(enemies.get(i)), "n_" + i+2);
+					nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(enemies.get(i)), "n_" + (i+2));
 				}
 				for(int i = 0; i < spears.size(); i++) {
-					nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(spears.get(i)), "n_" + i+5);
+					nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(spears.get(i)), "n_" + (i+5));
 				}
 				commandValue = nn.processInput();
+				//System.out.println("cValue: " + commandValue);
 			} catch (Exception e) {
-				commandValue = 0.0;
+				e.printStackTrace();
+				commandValue = 1.0;
+				//System.out.println("cValue: " + commandValue);
 			}
 			if(commandValue <= 0.25) {
 				system.getEventQueue().add(new PossibleMoveEvent(Direction.LEFT));
-			} else if(commandValue > 0.25 && commandValue <= 0.50 && spComp.getSpears() > 0) {
+			} else if(commandValue > 0.25 && commandValue <= 0.40 && spComp.getSpears() > 0) {
 				system.getEventQueue().add(new ThrowSpearEvent());
-			} else if(commandValue > 0.50 && commandValue <= 0.75) {
+			} else if(commandValue > 0.40 && commandValue <= 0.75) {
 				system.getEventQueue().add(new PossibleMoveEvent(Direction.RIGHT));
 			}
 		}

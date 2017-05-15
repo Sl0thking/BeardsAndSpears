@@ -10,10 +10,6 @@ public abstract class EntityToInputConverter {
 	
 	public static double convertEntityToValue(Entity entity) {
 		Position3DComp posComp = (Position3DComp) entity.getComponent(Position3DComp.class);
-		if(entity.getComponent(FocusComp.class) != null) {
-			System.out.println(calcAreaCover(posComp.getX(), posComp.getY()));
-		}
-		
 		return calcAreaCover(posComp.getX(), posComp.getY());
 	}
 	

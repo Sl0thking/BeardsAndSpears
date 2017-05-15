@@ -8,7 +8,7 @@ import de.sloth.component.MovableComp;
 import de.sloth.component.Position3DComp;
 import de.sloth.component.ScoreComp;
 import de.sloth.component.SpriteComp;
-import de.sloth.components.DummyNetwork;
+import de.sloth.components.NeuralNetwork;
 import de.sloth.components.NeuralNetworkComp;
 import de.sloth.components.SlothEnemyComp;
 import de.sloth.components.SpearBagComp;
@@ -70,6 +70,7 @@ public class EntityGenerator {
 		sloth.setName("Sloth");
 		sloth.setId(-1);
 		Position3DComp posComp = new Position3DComp();
+		posComp.setX(300);
 		MovableComp mComp = new MovableComp(playerSpeed, Direction.LEFT);
 		HitboxComp hbox = new HitboxComp(32, 32);
 		HealthComp heComp = new HealthComp(playerLife);
@@ -124,7 +125,7 @@ public class EntityGenerator {
 		Entity nnEntity = new Entity();
 		nnEntity.setId(-1);
 		int population = 4; //get from prop in future
-		NeuralNetworkComp nnComp = new NeuralNetworkComp(Integer.parseInt(ConfigLoader.getInstance().getConfig("nnGenerations", "5")), new DummyNetwork(), population);
+		NeuralNetworkComp nnComp = new NeuralNetworkComp(Integer.parseInt(ConfigLoader.getInstance().getConfig("nnGenerations", "5")), new NeuralNetwork(), population);
 		nnEntity.addComponent(nnComp);
 		return nnEntity;
 	}
