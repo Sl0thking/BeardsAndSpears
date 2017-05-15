@@ -127,7 +127,7 @@ public class Controller implements INeuralNetwork {
 		controller.setSequence(nnSeq);
 
 		System.out.println("-----------TEST CALCULATION FOR SEQUENCE CALCULATION---------");
-		String seq = "100000011111111111000";
+		String seq = "000000011111111111000";
 		System.out.println("SEQUENCE: "+seq);
 		int i = 0;
 		System.out.println("-------------------------------------------------------------");
@@ -154,5 +154,33 @@ public class Controller implements INeuralNetwork {
 		System.out.println(edgevalue);
 		System.out.println(Integer.toBinaryString((int)(edgevalue*127)));
 		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------");
+
+
+		double player = 0.0;
+		System.out.println((1/( 1 + Math.pow(Math.E,(-1*player)))));
+		player=(player+player)/2;
+		System.out.println((1/( 1 + Math.pow(Math.E,(-1*player)))));
+        player=(player+player)/2;
+        System.out.println((1/( 1 + Math.pow(Math.E,(-1*player)))));
+        player=(player+player)/2;
+        System.out.println((1/( 1 + Math.pow(Math.E,(-1*player)))));
+        player=(player+player)/2;
+        System.out.println((1/( 1 + Math.pow(Math.E,(-1*player)))));
+
 	}
 }

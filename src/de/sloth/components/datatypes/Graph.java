@@ -290,17 +290,22 @@ public class Graph {
 		//System.out.println("LOOK FOR INPUTS OF NODE: "+nodeId);
 		List<Edge> edges = this.getInputEdgesOfNode(nodeId);
 		double edgeSum = 0;
+		int edgecount = 0;
 		for (Edge edge : edges) {
 			if (edge.getEdgeType() == EdgeType.FORWARD) {
 				//System.out.println(" "+edge.toString());
+                //edgeSum = (edgeSum + (1/( 1 + Math.pow(Math.E,(-1*(edge.getStartNode().getValue()*edge.getValue()))))))/2;
 				edgeSum += edge.getStartNode().getValue()*edge.getValue();
+				edgecount++;
 			}
 		}
+		/*
+		System.out.println("EDGESUM: "+edgeSum);
+		System.out.println("SIGMOID: "+(double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum, edgecount));
+		System.out.println("SIGMOID / anzahl: "+(double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum, edgecount));*/
 		if (getNode(nodeId).getClass().equals(SigmoidNode.class)){
-			return (double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum);
-		} else {
-		    System.out.println("################## HALP");
-        }
+			return (double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum, edgecount);
+		}
 		return 0;
 	}
 	

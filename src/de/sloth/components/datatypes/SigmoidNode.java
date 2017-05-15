@@ -8,8 +8,8 @@ public class SigmoidNode extends Node {
 		super(nodeId, nodeType);
 	}
 
-	public double calculateSigmoid(double input) {
-		return (1/( 1 + Math.pow(Math.E,(-1*input))));
+	public double calculateSigmoid(double input, double anzahl) {
+		return (1/( 1 + Math.pow(Math.E,(-(anzahl/3)*(input-(anzahl/2))/anzahl))));
 	}
 
 }
