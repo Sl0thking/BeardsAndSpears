@@ -13,7 +13,7 @@ public class Node implements Comparable<Node>{
 	}
     public Node(String nodeId){
         this.nodeId = nodeId;
-        this.nodeType = NodeType.ALL;
+        this.nodeType = null;
         this.value = 0;
     }
 

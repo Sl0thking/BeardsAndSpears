@@ -25,7 +25,7 @@ public class Graph {
 	}
 
 	private void addNodeToMap(Node node) {
-		if(!this.nodeMap.containsValue(node)){
+		if(!this.nodeMap.containsKey(node)){
 			this.nodeMap.put(node, new ArrayList<Edge>());
 		}
 	}
@@ -146,7 +146,7 @@ public class Graph {
 	
 	private List<Edge> getInputEdgesOfNode(String nodeId) {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
-		for (Edge edge : getEdges()) {
+		for (Edge edge : this.getEdges()) {
 			if(edge.getEndNode().getNodeId().equals(nodeId)){
 				edges.add(edge);
 			}
