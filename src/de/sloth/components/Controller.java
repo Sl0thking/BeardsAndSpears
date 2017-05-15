@@ -57,6 +57,7 @@ public class Controller implements INeuralNetwork {
 	public double processInput() throws Exception {
 		Set<Node> sigmoids = this.getGraph().getSigmoidNodes();
 		for (Node node : sigmoids) {
+		    //System.out.println(node.toString());
 			try {
 				double sigmoidCalculation = this.getGraph().calculateInputsOfNode(node.getNodeId());
 				((SigmoidNode) node).setValue(sigmoidCalculation);
@@ -109,6 +110,7 @@ public class Controller implements INeuralNetwork {
 		System.out.println(controller.getEdgeCount());
 		System.out.println("-------------ALL NODES--------------");
 		System.out.println(controller.getGraph().toStringNodeType(NodeType.ALL, true));
+		System.out.println("------------------------------------");
 		try {
 			double v = controller.processInput();
 		} catch (Exception e) {

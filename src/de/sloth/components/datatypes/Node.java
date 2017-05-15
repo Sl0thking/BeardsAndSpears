@@ -11,6 +11,11 @@ public class Node implements Comparable<Node>{
 		this.nodeType = nodeType;
 		this.value = 0;
 	}
+    public Node(String nodeId){
+        this.nodeId = nodeId;
+        this.nodeType = NodeType.ALL;
+        this.value = 0;
+    }
 
 	public double getValue() {
 		return value;
@@ -49,26 +54,18 @@ public class Node implements Comparable<Node>{
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Node other = (Node) obj;
-		if (nodeId == null) {
-			if (other.nodeId != null)
-				return false;
-		} else if (!nodeId.equals(other.nodeId))
-			return false;
-		if (nodeType != other.nodeType)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	@Override
+        Node node = (Node) o;
+
+        if (nodeId != null ? !nodeId.equals(node.nodeId) : node.nodeId != null) return false;
+        return nodeType == node.nodeType;
+    }
+
+    @Override
 	public int compareTo(Node o) {
 		int ownId = Integer.valueOf(this.getNodeId().split("_")[1]);
 		int otherId = Integer.valueOf(o.getNodeId().split("_")[1]);

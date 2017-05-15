@@ -85,15 +85,27 @@ public class Graph {
 	}
 	
 	public Node getNode(String nodeId) throws Exception {
+	    Node node = new Node(nodeId);
 		try {
-            return (Node) this.getNodeMap().get(nodeId);
+		    if (this.getNodes().contains(node)){
+		        Iterator<Node> itNode = this.getNodes().iterator();
+		        while (itNode.hasNext()){
+		            Node nowNode = itNode.next();
+		            if(nowNode.getNodeId().equals(nodeId)){
+		                return nowNode;
+                    }
+                }
+            } else {
+                throw new Exception("Node ["+nodeId+"] Not Found!");
+            }
 		} catch (Exception ex){
-			throw new Exception("Node ["+nodeId+"] Found!");
+			throw new Exception("Node ["+nodeId+"] Not Found!");
 		}
+		return node;
 	}
 	
 	public Set<Node> getNodes() {
-		return this.nodeMap.keySet();
+		return this.getNodeMap().keySet();
 	}
 
 	public TreeMap getNodeMap(){
@@ -159,14 +171,14 @@ public class Graph {
 		for (Node node : this.getNodes()) {
 			if (nodeType == NodeType.ALL) {
 				str += node.toString()+"\n";
-				for (Edge edge : getEdgesOfNode(node.getNodeId())) {
+				/*for (Edge edge : getEdgesOfNode(node.getNodeId())) {
 					str += getForwordEdge(edge, onlyForward);
-				}
+				}*/
 			} else if (node.getNodeType() == nodeType) {			
 				str += node.toString()+"\n";
-				for (Edge edge : getEdgesOfNode(node.getNodeId())) {
+				/*for (Edge edge : getEdgesOfNode(node.getNodeId())) {
 					str += getForwordEdge(edge, onlyForward);
-				}
+				}*/
 			}
 		}
 		return str;
@@ -280,13 +292,15 @@ public class Graph {
 		double edgeSum = 0;
 		for (Edge edge : edges) {
 			if (edge.getEdgeType() == EdgeType.FORWARD) {
-				System.out.println(" "+edge.toString());
+				//System.out.println(" "+edge.toString());
 				edgeSum += edge.getStartNode().getValue()*edge.getValue();
 			}
 		}
 		if (getNode(nodeId).getClass().equals(SigmoidNode.class)){
 			return (double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum);
-		}
+		} else {
+		    System.out.println("################## HALP");
+        }
 		return 0;
 	}
 	
