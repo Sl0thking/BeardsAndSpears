@@ -3,6 +3,7 @@ package de.sloth.spearSystems;
 import de.sloth.components.SpearBagComp;
 import de.sloth.core.EntityGenerator;
 import de.sloth.entity.Entity;
+import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
@@ -18,7 +19,7 @@ public class ThrowSpear implements IBehavior {
 	public void execute(GameSystem system, GameEvent expectedEvent) {
 		ThrowSpearEvent tse = (ThrowSpearEvent) expectedEvent;
 		int spearsInGame = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), FlyingComp.class).size();
-		if(spearsInGame < 10) {
+		if(spearsInGame < Integer.valueOf(ConfigLoader.getInstance().getConfig("maxSpears", "18"))) {
 			if(tse.getThrowingEntity() == null) {
 				Entity sloth = system.getEntityManager().getActivePlayabaleEntity();
 				SpearBagComp scomp = (SpearBagComp) sloth.getComponent(SpearBagComp.class);

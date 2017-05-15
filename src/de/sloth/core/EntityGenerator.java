@@ -47,11 +47,12 @@ public class EntityGenerator {
 		//AnimationComp aniComp = new AnimationComp("idle", 0, 20);
 		if(direction.equals(Direction.LEFT)) {
 			posComp.setX((int) (SPRITE_WIDTH*SCALING));
-			posComp.setY((int) (SPRITE_HEIGHT*SCALING));
-		} else {
+		} else if(direction.equals(Direction.RIGHT)) {
 			posComp.setX(CANVAS_WIDTH-((int) (SPRITE_WIDTH*SCALING)));
-			posComp.setY((int) (SPRITE_HEIGHT*SCALING));
+		} else {
+			posComp.setX(CANVAS_WIDTH/2);
 		}
+		posComp.setY((int) (SPRITE_HEIGHT*SCALING));
 		SpriteComp s2Comp = new SpriteComp("Viking_left.png");
 		enemy.addComponent(posComp);
 		enemy.addComponent(s2Comp);
@@ -75,7 +76,7 @@ public class EntityGenerator {
 		HitboxComp hbox = new HitboxComp(32, 32);
 		HealthComp heComp = new HealthComp(playerLife);
 		SpearBagComp spComp = new SpearBagComp(playerSpears);
-		ScoreComp scoreComp = new ScoreComp(-1);
+		ScoreComp scoreComp = new ScoreComp(0);
 		AnimationComp aniComp = new AnimationComp("idle", 0, 15);
 		posComp.setY(CANVAS_HEIGTH-(int) (SPRITE_HEIGHT*SCALING));
 		FocusComp fComp = new FocusComp();

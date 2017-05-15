@@ -1,5 +1,7 @@
 package de.sloth.core;
 
+import java.util.Random;
+
 import de.sloth.component.HealthComp;
 import de.sloth.component.ScoreComp;
 import de.sloth.components.SpearBagComp;
@@ -36,9 +38,17 @@ public class StartGame implements IBehavior {
 			psl.getScoreLabel().textProperty().bind(new SimpleStringProperty("Ruhm ").concat(scoreComp.getScoreProperty().asString()));
 		}
 		system.getEntityManager().addEntity(player);
-		int enemyCount = Integer.parseInt(ConfigLoader.getInstance().getConfig("enemyCount", "1"));
+		int enemyCount = Integer.parseInt(ConfigLoader.getInstance().getConfig("enemyCount", "3"));
+		Random rand = new Random();
 		for(int i = 0; i < enemyCount; i++) {
-			system.getEntityManager().addEntity(EntityGenerator.getInstance().generateEnemy(Direction.LEFT));
+			Direction direct = Direction.CENTER;
+			int nDirection = rand.nextInt(3);
+			if(nDirection == 0) {
+				direct = Direction.LEFT;
+			} else if(nDirection == 1) {
+				direct = Direction.RIGHT;
+			}
+			system.getEntityManager().addEntity(EntityGenerator.getInstance().generateEnemy(direct));
 		}
 		system.getEventQueue().add(new SystemActivationEvent("single", "endCondition", true));
 	}

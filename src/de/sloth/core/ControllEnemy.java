@@ -6,6 +6,7 @@ import java.util.Random;
 import de.sloth.components.SlothEnemyComp;
 import de.sloth.entity.Entity;
 import de.sloth.spearSystems.ThrowSpearEvent;
+import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
@@ -20,13 +21,16 @@ public class ControllEnemy implements IBehavior {
 		Random rand = new Random();
 		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), SlothEnemyComp.class);
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
-		if(enemies.size() < 5) {
-			int nenemy = rand.nextInt(100);
+		if(enemies.size() < Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "7"))) {
+			int nenemy = rand.nextInt(200);
 			if(nenemy == 0) {
-				Direction direct = Direction.RIGHT;
-				boolean isLeft = rand.nextBoolean();
-				if(isLeft) {
+				
+				Direction direct = Direction.CENTER;
+				int nDirection = rand.nextInt(3);
+				if(nDirection == 0) {
 					direct = Direction.LEFT;
+				} else if(nDirection == 1) {
+					direct = Direction.RIGHT;
 				}
 				system.getEntityManager().addEntity(EntityGenerator.getInstance().generateEnemy(direct));
 			} 

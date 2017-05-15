@@ -1,6 +1,5 @@
 package de.sloth.core;
 
-import de.sloth.component.FocusComp;
 import de.sloth.component.Position3DComp;
 import de.sloth.entity.Entity;
 

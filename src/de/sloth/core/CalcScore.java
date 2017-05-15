@@ -21,7 +21,7 @@ public class CalcScore implements IBehavior {
 			ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);
 			if(cse.getsType().equals(ScoreType.SURVIVAL)) {
 				this.calls += 1;
-				if(calls > 99) {
+				if(calls > 199) {
 					scComp.setScore(scComp.getScore() + 1);
 					calls = 0;
 				}

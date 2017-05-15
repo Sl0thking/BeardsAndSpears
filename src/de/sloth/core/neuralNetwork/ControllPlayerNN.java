@@ -9,6 +9,7 @@ import de.sloth.components.SpearBagComp;
 import de.sloth.core.EntityToInputConverter;
 import de.sloth.entity.Entity;
 import de.sloth.spearSystems.ThrowSpearEvent;
+import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
@@ -24,6 +25,8 @@ public class ControllPlayerNN implements IBehavior {
 		EntityManagerNN nnMan = (EntityManagerNN) system.getEntityManager();
 		INeuralNetwork nn = ((NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class)).getNetwork();
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
+		int maxEnemies = Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "7"));
+		int maxSpears = Integer.valueOf(ConfigLoader.getInstance().getConfig("maxSpears", "7"));
 		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), SlothEnemyComp.class);
 		List<Entity> spears = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), FlyingComp.class);
 		if(player != null) {
@@ -33,11 +36,19 @@ public class ControllPlayerNN implements IBehavior {
 			try {
 				//System.out.println(((NeuralNetwork) nn).getGraph().toStringNodeType(NodeType.INPUT, false));
 				nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(player), "n_1");
-				for(int i = 0; i < enemies.size(); i++) {
-					nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(enemies.get(i)), "n_" + (i+2));
+				for(int i = 0; i < maxEnemies; i++) {
+					if(i < enemies.size()) {
+						nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(enemies.get(i)), "n_" + (i+2));
+					} else {
+						nn.setInputOfNode(0.0, "n_" + (i+2));
+					}
 				}
-				for(int i = 0; i < spears.size(); i++) {
-					nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(spears.get(i)), "n_" + (i+5));
+				for(int i = 0; i < maxSpears; i++) {
+					if(i < spears.size()) {
+						nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(spears.get(i)), "n_" + (i+5));
+					} else {
+						nn.setInputOfNode(0.0, "n_" + (i+5));
+					}
 				}
 				commandValue = nn.processInput();
 				//System.out.println("cValue: " + commandValue);
@@ -46,11 +57,11 @@ public class ControllPlayerNN implements IBehavior {
 				commandValue = 1.0;
 				//System.out.println("cValue: " + commandValue);
 			}
-			if(commandValue <= 0.25) {
+			if(commandValue <= 0.35) {
 				system.getEventQueue().add(new PossibleMoveEvent(Direction.LEFT));
-			} else if(commandValue > 0.25 && commandValue <= 0.40 && spComp.getSpears() > 0) {
+			} else if(commandValue > 0.25 && commandValue <= 0.35 && spComp.getSpears() > 0) {
 				system.getEventQueue().add(new ThrowSpearEvent());
-			} else if(commandValue > 0.40 && commandValue <= 0.75) {
+			} else if(commandValue > 0.65) {
 				system.getEventQueue().add(new PossibleMoveEvent(Direction.RIGHT));
 			}
 		}

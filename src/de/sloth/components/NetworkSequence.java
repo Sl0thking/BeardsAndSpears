@@ -7,7 +7,7 @@ public class NetworkSequence implements Comparable<NetworkSequence>{
 	public NetworkSequence(String sequence) {
 		super();
 		this.sequence = sequence;
-		this.fitnessLvl = 0;
+		this.fitnessLvl = -1;
 	}
 	public String getSequence() {
 		return sequence;

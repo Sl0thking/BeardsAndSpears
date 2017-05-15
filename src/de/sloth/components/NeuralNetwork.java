@@ -1,6 +1,7 @@
 package de.sloth.components;
 
 import de.sloth.components.datatypes.*;
+import de.sloth.system.game.core.ConfigLoader;
 
 import java.util.Set;
 
@@ -15,8 +16,11 @@ public class NeuralNetwork implements INeuralNetwork {
 
 	public Graph createTestGraph() {
 		graph = new Graph();
-		graph.addInputNodes(16); //14
-		graph.addHiddenNodes(44); //45
+		int maxEnemies = Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "6"));
+		int maxSpears = Integer.valueOf(ConfigLoader.getInstance().getConfig("maxSpears", "18"));
+		int inputNodes = 1 + maxEnemies + maxSpears;
+		graph.addInputNodes(inputNodes); //14
+		graph.addHiddenNodes(inputNodes*2); //45
 		graph.addOutputNodes(1);
 		try {
 			graph.buildHiddenLayers(2);
