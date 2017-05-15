@@ -17,6 +17,10 @@ public abstract class NetworkSequenceIO {
 		targetNetworkFile.createNewFile();
 		BufferedWriter bw =  new BufferedWriter(new FileWriter(targetNetworkFile));
 		bw.write(sequence.getSequence());
+		bw.flush();
+		bw.newLine();
+		bw.write(String.valueOf(sequence.getFitnessLvl()));
+		bw.flush();
 		bw.close();
 	}
 	
@@ -25,6 +29,7 @@ public abstract class NetworkSequenceIO {
 		BufferedReader br = new BufferedReader(new FileReader(srcNNFile));
 		NetworkSequence ns = new NetworkSequence("");
 		ns.setSequence(br.readLine());
+		ns.setFitnessLvl(Integer.parseInt(br.readLine()));
 		br.close();
 		return ns;
 	}

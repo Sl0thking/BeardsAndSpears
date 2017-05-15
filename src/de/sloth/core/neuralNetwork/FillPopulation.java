@@ -20,14 +20,20 @@ public class FillPopulation implements IBehavior{
 	@Override
 	public void execute(GameSystem system, GameEvent arg1) {
 		System.out.println("TRIGGERED");
+		NetworkSequence lastSeq = null;
 		EntityManagerNN nnMan = (EntityManagerNN) system.getEntityManager();
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class);
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		while(nnComp.getMaxPopSize() - nnComp.getPopulation().size() != 0) {
 			System.out.println("CREATE SEQUENCE...");
-			pop.add(generateRandomSequence(nnComp.getNetwork().getEdgeCount()));
+			lastSeq = generateRandomSequence(nnComp.getNetwork().getEdgeCount());
+			pop.add(lastSeq);
 		}
-		nnComp.getNetwork().setSequence(pop.get(0));
+		if(lastSeq != null) {
+			nnComp.getNetwork().setSequence(lastSeq);
+		} else {
+			system.getEventQueue().add(new GeneticalEvent("CheckOrMutate"));
+		}
 	}
 	
 	private NetworkSequence generateRandomSequence(int edges) {

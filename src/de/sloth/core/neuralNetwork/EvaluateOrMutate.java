@@ -38,13 +38,20 @@ public class EvaluateOrMutate implements IBehavior {
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("Combine and mutate...");
-				Object[] cleaned_eval_gen = new NetworkSequence[nnComp.getMaxPopSize() / 2];
+				Object[] cleaned_eval_gen = new NetworkSequence[nnComp.getSizeOfElite()];
 				for(int i = nnComp.getMaxPopSize()-nnComp.getSizeOfElite(); i < nnComp.getMaxPopSize(); i++) {
 					cleaned_eval_gen[i-(nnComp.getMaxPopSize()-nnComp.getSizeOfElite())] = eval_gen[i];
 				}
-				NetworkSequence[] comb_gen = combine(Arrays.copyOf(cleaned_eval_gen, cleaned_eval_gen.length, NetworkSequence[].class));
-				NetworkSequence[] mutate_gen = mutate(comb_gen);
-				List<NetworkSequence> newPop = new LinkedList<NetworkSequence>(Arrays.asList(mutate_gen));
+				NetworkSequence[] strongest_gen = {(NetworkSequence) cleaned_eval_gen[0], (NetworkSequence) cleaned_eval_gen[1]};
+				NetworkSequence[] other_gen = new NetworkSequence[cleaned_eval_gen.length-2];
+				for(int i = 2; i < cleaned_eval_gen.length; i++) {
+					other_gen[i-2] = (NetworkSequence) cleaned_eval_gen[i];
+				}
+				NetworkSequence[] mutate_gen = mutate(combine(strongest_gen));
+				List<NetworkSequence> newPop = new LinkedList<NetworkSequence>();
+				newPop.addAll(Arrays.asList(mutate_gen));
+				newPop.addAll(Arrays.asList(other_gen));
+				newPop.addAll(Arrays.asList(strongest_gen));
 				nnComp.setPopulation(newPop);
 				System.out.println("Population of Generation: ");
 				for(NetworkSequence nseq : nnComp.getPopulation()) {
@@ -88,7 +95,7 @@ public class EvaluateOrMutate implements IBehavior {
 						  eval_gen[1].getSequence().substring(eval_gen[1].getSequence().length()/2));
 		n_seq_2.setSequence(eval_gen[1].getSequence().substring(0, eval_gen[1].getSequence().length()/2) + 
 				  eval_gen[0].getSequence().substring(eval_gen[0].getSequence().length()/2));
-		NetworkSequence[] c_ns = {eval_gen[0], eval_gen[1], n_seq_1, n_seq_2};
+		NetworkSequence[] c_ns = {n_seq_1, n_seq_2};
 		return c_ns;
 	}
 
