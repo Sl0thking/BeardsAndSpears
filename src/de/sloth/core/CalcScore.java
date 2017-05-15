@@ -17,19 +17,20 @@ public class CalcScore implements IBehavior {
 	public void execute(GameSystem system, GameEvent expectedEvent) {
 		CalcScoreEvent cse = (CalcScoreEvent) expectedEvent;
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
-		ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);
-		if(cse.getsType().equals(ScoreType.SURVIVAL)) {
-			this.calls += 1;
-			if(calls > 99) {
-				scComp.setScore(scComp.getScore() + 1);
-				calls = 0;
+		if(player != null) {
+			ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);
+			if(cse.getsType().equals(ScoreType.SURVIVAL)) {
+				this.calls += 1;
+				if(calls > 99) {
+					scComp.setScore(scComp.getScore() + 1);
+					calls = 0;
+				}
+			} else if (cse.getsType().equals(ScoreType.KILL)) {
+				scComp.setScore(scComp.getScore() + 100);
+				//collect
+			} else {
+				scComp.setScore(scComp.getScore() + 50);
 			}
-		} else if (cse.getsType().equals(ScoreType.KILL)) {
-			scComp.setScore(scComp.getScore() + 100);
-		//collect
-		} else {
-			scComp.setScore(scComp.getScore() + 50);
 		}
 	}
-
 }

@@ -1,12 +1,15 @@
 package de.sloth.core.neuralNetwork;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.sloth.components.NetworkSequence;
 import de.sloth.components.NeuralNetworkComp;
+import de.sloth.core.NetworkSequenceIO;
 import de.sloth.core.StartGameEvent;
+import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
@@ -18,7 +21,7 @@ public class EvaluateOrMutate implements IBehavior {
 	
 	private NetworkSequence getUnratedSequence(List<NetworkSequence> pop) {
 		for(NetworkSequence nseq : pop) {
-			if(nseq.getFitnessLvl() == 0) {
+			if(nseq.getFitnessLvl() == -1) {
 				return nseq;
 			}
 		}
@@ -32,27 +35,30 @@ public class EvaluateOrMutate implements IBehavior {
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		Object[] eval_gen = evaluate(system, nnComp, pop);
 		if(eval_gen != null) {
-			for(Object o : eval_gen) {
-				System.out.println(o);
-			}
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
-			System.out.println("Curr Gen: " + nnComp.getCurrGen());
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("Combine and mutate...");
 				Object[] cleaned_eval_gen = new NetworkSequence[nnComp.getMaxPopSize() / 2];
-				for(int i = 2; i < 4; i++) {
-					cleaned_eval_gen[i-2] = eval_gen[i];
+				for(int i = nnComp.getMaxPopSize()-nnComp.getSizeOfElite(); i < nnComp.getMaxPopSize(); i++) {
+					cleaned_eval_gen[i-(nnComp.getMaxPopSize()-nnComp.getSizeOfElite())] = eval_gen[i];
 				}
 				NetworkSequence[] comb_gen = combine(Arrays.copyOf(cleaned_eval_gen, cleaned_eval_gen.length, NetworkSequence[].class));
 				NetworkSequence[] mutate_gen = mutate(comb_gen);
 				List<NetworkSequence> newPop = new LinkedList<NetworkSequence>(Arrays.asList(mutate_gen));
-				for(NetworkSequence seq : newPop) {
-					System.out.println(seq);
-				}
 				nnComp.setPopulation(newPop);
+				System.out.println("Population of Generation: ");
+				for(NetworkSequence nseq : nnComp.getPopulation()) {
+					System.out.println(nseq);
+				}
 				system.getEventQueue().add(new GeneticalEvent("Init"));
 			} else {
-				
+				int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
+				NetworkSequenceIO.clearDir(".\\learn_archive_" + learnArchiveID + "\\teached_population");
+				try {
+					NetworkSequenceIO.saveSequences(".\\learn_archive_" + learnArchiveID + "\\teached_population", nnComp.getPopulation());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				System.exit(0);
 			}
 		}
@@ -82,7 +88,7 @@ public class EvaluateOrMutate implements IBehavior {
 						  eval_gen[1].getSequence().substring(eval_gen[1].getSequence().length()/2));
 		n_seq_2.setSequence(eval_gen[1].getSequence().substring(0, eval_gen[1].getSequence().length()/2) + 
 				  eval_gen[0].getSequence().substring(eval_gen[0].getSequence().length()/2));
-		NetworkSequence[] c_ns = {n_seq_1, n_seq_2};
+		NetworkSequence[] c_ns = {eval_gen[0], eval_gen[1], n_seq_1, n_seq_2};
 		return c_ns;
 	}
 
@@ -92,6 +98,7 @@ public class EvaluateOrMutate implements IBehavior {
 	private Object[] evaluate(GameSystem system, NeuralNetworkComp nnComp, List<NetworkSequence> pop) {
 		NetworkSequence nnSeq = getUnratedSequence(pop);
 		if(nnSeq != null) {
+			nnSeq.setFitnessLvl(0);
 			nnComp.getNetwork().setSequence(nnSeq);
 			system.getEventQueue().add(new StartGameEvent());
 			return null;

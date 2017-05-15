@@ -21,6 +21,7 @@ public class StartGame implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system, GameEvent expectedEvent) {
+		System.out.println("Start game round...");
 		system.getEntityManager().clear();
 		Entity player = EntityGenerator.getInstance().generatePlayer();
 		if(Boolean.valueOf(ConfigLoader.getInstance().getConfig("showGui", "false"))) {

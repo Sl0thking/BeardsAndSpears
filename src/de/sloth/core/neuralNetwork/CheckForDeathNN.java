@@ -20,8 +20,8 @@ public class CheckForDeathNN implements IBehavior {
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnEntity.getComponent(NeuralNetworkComp.class);
 		ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);
 		if(hComp.getLifes() == 0) {
-			System.out.println("DIED...");
-			nnComp.getNetwork().getSequence().setFitnessLvl(scComp.getScoreProperty().intValue());
+			nnComp.getNetwork().getSequence().setFitnessLvl(scComp.getScore());
+			System.out.println("SCORED: " + nnComp.getNetwork().getSequence());
 			system.getEventQueue().add(new GeneticalEvent("CheckOrMutate"));
 		} else {
 			system.getEventQueue().add(new CalcScoreEvent(ScoreType.SURVIVAL));

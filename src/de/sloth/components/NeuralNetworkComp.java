@@ -11,13 +11,15 @@ public class NeuralNetworkComp extends Component {
 	private INeuralNetwork network;
 	private List<NetworkSequence> population;
 	private int maxPopSize;
+	private int sizeOfElite;
 	
  
-	public NeuralNetworkComp(int generations, INeuralNetwork network, int maxPopSize) {
+	public NeuralNetworkComp(int generations, INeuralNetwork network, int maxPopSize, int sizeOfElite) {
 		super();
 		this.generations = generations;
 		this.currGen = 0;
 		this.network = network;
+		this.setSizeOfElite(sizeOfElite);
 		this.setPopulation(new ArrayList<NetworkSequence>());
 		this.setMaxPopSize(maxPopSize);
 	}
@@ -64,5 +66,13 @@ public class NeuralNetworkComp extends Component {
 
 	public void setCurrGen(int currGen) {
 		this.currGen = currGen;
+	}
+
+	public int getSizeOfElite() {
+		return sizeOfElite;
+	}
+
+	public void setSizeOfElite(int sizeOfElite) {
+		this.sizeOfElite = sizeOfElite;
 	}
 }

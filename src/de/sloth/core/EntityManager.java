@@ -143,7 +143,7 @@ public class EntityManager implements IEntityManagement {
 
 	@Override
 	public void removeEntity(Entity entity) {
-		if(this.activeEntity.equals(entity)) {
+		if(this.activeEntity != null && this.activeEntity.equals(entity)) {
 			this.activeEntity = null;
 		}
 		this.playableEntities.remove(entity);

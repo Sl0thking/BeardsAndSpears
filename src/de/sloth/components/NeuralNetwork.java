@@ -2,12 +2,12 @@ package de.sloth.components;
 
 import de.sloth.components.datatypes.*;
 
-import java.util.List;
 import java.util.Set;
 
 public class NeuralNetwork implements INeuralNetwork {
 
 	private Graph graph;
+	private NetworkSequence nnSeq;
 
 	public NeuralNetwork() {
 		this.createTestGraph();
@@ -70,31 +70,20 @@ public class NeuralNetwork implements INeuralNetwork {
 
 	@Override
 	public void setSequence(NetworkSequence nnSeq) {
-		System.out.println(nnSeq.getSequence().length());
+		this.nnSeq = nnSeq;
 		Set<Edge> edges = this.getGraph().getEdges();
 		String seq = nnSeq.getSequence();
 		int i = 0;
 		for (Edge edge : edges) {
 			double edgeValue = (((double) Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2) - 64) / 127);
-			//System.out.println(edgeValue);
 			edge.setValue(edgeValue);
 			i++;
 		}
-		//System.out.println();
 	}
 
 	@Override
 	public NetworkSequence getSequence() {
-		String seq = "";
-		Set<Edge> edges = this.getGraph().getEdges();
-		for (Edge edge : edges) {
-			/*System.out.println(edge.getValue());
-			System.out.println((int)(edge.getValue()*127));
-			System.out.println(Integer.toBinaryString((int)(edge.getValue()*127)));*/
-			seq += Integer.toBinaryString((int)(edge.getValue()*127));
-		}
-		NetworkSequence netSeq = new NetworkSequence(seq);
-		return netSeq;
+		return nnSeq;
 	}
 
 	@Override

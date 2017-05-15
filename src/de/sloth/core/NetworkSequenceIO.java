@@ -11,7 +11,7 @@ import java.util.List;
 
 import de.sloth.components.NetworkSequence;
 
-public abstract class NetworkSequenceToFile {
+public abstract class NetworkSequenceIO {
 	public static void saveSequence(String path, String filename, NetworkSequence sequence) throws IOException {
 		File targetNetworkFile = new File(path + File.separator + filename);
 		targetNetworkFile.createNewFile();
@@ -43,7 +43,9 @@ public abstract class NetworkSequenceToFile {
 	public static void saveSequences(String path, List<NetworkSequence> nseqs) throws IOException {
 		int fid = 0;
 		for(NetworkSequence ns : nseqs) {
+			System.out.println(ns.toString());
 			saveSequence(path, "ns" + fid + ".nsq", ns);
+			fid++;
 		}
 	}
 	

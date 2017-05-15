@@ -1,17 +1,21 @@
 package de.sloth.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameCore;
 import de.sloth.system.game.core.GameEvent;
+import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IEntityManagement;
 import de.sloth.system.hmi.SpriteLoader;
+import de.sloth.components.NetworkSequence;
 import de.sloth.components.NeuralNetworkComp;
 import de.sloth.core.EntityGenerator;
 import de.sloth.core.EntityManager;
 import de.sloth.core.GameSystemGenerator;
+import de.sloth.core.NetworkSequenceIO;
 import de.sloth.core.StartGameEvent;
 import de.sloth.core.neuralNetwork.GeneticalEvent;
 import de.sloth.core.neuralNetwork.EntityManagerNN;
@@ -33,6 +37,8 @@ public class Main extends Application {
 		boolean showGui = Boolean.valueOf(ConfigLoader.getInstance().getConfig("showGui", "false"));
 		IEntityManagement entityManager = new EntityManager();
 		GameCore core = new GameCore();
+		HMICore gameHmi = null;
+		
 		if(isKiControlled) {
 			entityManager = new EntityManagerNN();
 			//check if is learning mode
@@ -45,17 +51,25 @@ public class Main extends Application {
 				new File(archiveFile.getAbsolutePath() + "\\replay").mkdir();
 			}
 			entityManager.addEntity(EntityGenerator.getInstance().generateNNEntity());
-			NeuralNetworkComp nnComp = (NeuralNetworkComp) IEntityManagement.filterEntitiesByComponent(entityManager.getAllEntities(), NeuralNetworkComp.class);
-			if(Boolean.valueOf(ConfigLoader.getInstance().getConfig("isLearning", "false"))) {
-				//
+			NeuralNetworkComp nnComp = (NeuralNetworkComp) IEntityManagement.filterEntitiesByComponent(entityManager.getAllEntities(), NeuralNetworkComp.class).get(0).getComponent(NeuralNetworkComp.class);
+			if(Boolean.valueOf(ConfigLoader.getInstance().getConfig("isLearning", "true"))) {
+				try {
+					nnComp.setPopulation(NetworkSequenceIO.loadSequences(archiveFile.getAbsolutePath() + "\\teached_population"));
+				} catch (IOException e) {}
 			} else {
-				//
+				try {
+					NetworkSequence nseq = NetworkSequenceIO.loadSequence(archiveFile.getAbsolutePath() + "\\replay", "ns1.nsq");
+					nnComp.addPopulation(nseq);
+					nnComp.getNetwork().setSequence(nseq);
+				} catch (IOException e) {
+					System.exit(0);
+				}
 			}
-			core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
 		} 
-		
+		core.registerSystem(GameSystemGenerator.getInstance().generateScoreSystem(entityManager, eventQueue));
 		if(showGui) {
 			int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
 			int screenHeight = (int) Screen.getPrimary().getBounds().getHeight(); 
@@ -66,12 +80,11 @@ public class Main extends Application {
 			String[] aniPhaseNames = {"idle"};
 			int aniPhases = 4;
 			SpriteLoader spl = SpriteLoader.getInstance(2.0, 32, 32, aniPhases, aniPhaseNames);
-			HMICore gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers, spl);
+			gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers, spl);
 			Scene scene = new Scene(gameHmi);
 			
 			gameHmi.registerGameInterfaceLayer(new PlayerStatusLayer(eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
-			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
 			if(!isKiControlled) {
 				//initate controlls
 				gameHmi.getCanvas().setOnKeyPressed(GameSystemGenerator.getInstance().generateGameControllSystem(entityManager, eventQueue));
@@ -85,7 +98,8 @@ public class Main extends Application {
 			primaryStage.setAlwaysOnTop(true);
 			primaryStage.show();
 		}
-		
+
+		core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
 		core.registerSystem(GameSystemGenerator.getInstance().generateSystemActivationSystem(entityManager, core, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateCheckCollisionSystem(entityManager, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateCollisionSystem(entityManager, eventQueue));
@@ -94,6 +108,10 @@ public class Main extends Application {
 		core.registerSystem(GameSystemGenerator.getInstance().generateEnemyControllSystem(entityManager, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateFlyingSpearSystem(entityManager, eventQueue));
 		core.registerSystem(GameSystemGenerator.getInstance().generateThrowSpearSystem(entityManager, eventQueue));
+		
+		/*for(GameSystem gsys : core.getRegistredSystems()) {
+			System.out.println("ACTIVE: " + gsys.getSystemID());
+		}*/
 		
 		core.start();
 		eventQueue.add(new GeneticalEvent("Init"));

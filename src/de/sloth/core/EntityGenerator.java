@@ -75,7 +75,7 @@ public class EntityGenerator {
 		HitboxComp hbox = new HitboxComp(32, 32);
 		HealthComp heComp = new HealthComp(playerLife);
 		SpearBagComp spComp = new SpearBagComp(playerSpears);
-		ScoreComp scoreComp = new ScoreComp(0);
+		ScoreComp scoreComp = new ScoreComp(-1);
 		AnimationComp aniComp = new AnimationComp("idle", 0, 15);
 		posComp.setY(CANVAS_HEIGTH-(int) (SPRITE_HEIGHT*SCALING));
 		FocusComp fComp = new FocusComp();
@@ -124,8 +124,10 @@ public class EntityGenerator {
 	public Entity generateNNEntity() {
 		Entity nnEntity = new Entity();
 		nnEntity.setId(-1);
-		int population = 4; //get from prop in future
-		NeuralNetworkComp nnComp = new NeuralNetworkComp(Integer.parseInt(ConfigLoader.getInstance().getConfig("nnGenerations", "5")), new NeuralNetwork(), population);
+		int population = Integer.parseInt(cl.getConfig("nnMaxPop", "8")); //get from prop in future
+		int generations = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnGenerations", "5"));
+		int sizeOfElite = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnSizeOfElite", "2"));
+		NeuralNetworkComp nnComp = new NeuralNetworkComp(generations, new NeuralNetwork(), population, sizeOfElite);
 		nnEntity.addComponent(nnComp);
 		return nnEntity;
 	}
