@@ -3,9 +3,9 @@ package de.sloth.neuralNetwork.behavior;
 import java.util.List;
 import java.util.Random;
 
-import de.sloth.components.NetworkSequence;
-import de.sloth.components.NeuralNetworkComp;
 import de.sloth.neuralNetwork.EntityManagerNN;
+import de.sloth.neuralNetwork.component.NetworkSequence;
+import de.sloth.neuralNetwork.component.NeuralNetworkComp;
 import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;

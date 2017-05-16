@@ -1,4 +1,4 @@
-package de.sloth.components;
+package de.sloth.neuralNetwork.component;
 
 public class NetworkSequence implements Comparable<NetworkSequence>{
 	private String sequence;

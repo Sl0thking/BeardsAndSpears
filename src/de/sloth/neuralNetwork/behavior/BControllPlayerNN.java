@@ -2,13 +2,13 @@ package de.sloth.neuralNetwork.behavior;
 
 import java.util.List;
 
-import de.sloth.components.INeuralNetwork;
-import de.sloth.components.NeuralNetworkComp;
-import de.sloth.components.VikingEnemyComp;
-import de.sloth.components.SpearBagComp;
+import de.sloth.core.component.VikingEnemyComp;
 import de.sloth.entity.Entity;
 import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.EntityNNInputConverter;
+import de.sloth.neuralNetwork.component.INeuralNetwork;
+import de.sloth.neuralNetwork.component.NeuralNetworkComp;
+import de.sloth.spears.component.SpearBagComp;
 import de.sloth.spears.event.ThrowSpearEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;

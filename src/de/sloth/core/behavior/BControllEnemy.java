@@ -1,9 +1,10 @@
-package de.sloth.core;
+package de.sloth.core.behavior;
 
 import java.util.List;
 import java.util.Random;
 
-import de.sloth.components.VikingEnemyComp;
+import de.sloth.core.EntityGenerator;
+import de.sloth.core.component.VikingEnemyComp;
 import de.sloth.entity.Entity;
 import de.sloth.spears.event.ThrowSpearEvent;
 import de.sloth.system.game.core.ConfigLoader;
@@ -14,7 +15,7 @@ import de.sloth.system.game.core.IEntityManagement;
 import de.sloth.system.game.moveSystem.Direction;
 import de.sloth.system.game.moveSystem.PossibleMoveEvent;
 
-public class ControllEnemy implements IBehavior {
+public class BControllEnemy implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.sloth.components.NetworkSequence;
+import de.sloth.neuralNetwork.component.NetworkSequence;
 
 public abstract class NetworkSequenceIO {
 	public static void saveSequence(String path, String filename, NetworkSequence sequence) throws IOException {

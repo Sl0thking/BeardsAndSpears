@@ -1,4 +1,4 @@
-package de.sloth.components;
+package de.sloth.spears.component;
 
 import de.sloth.component.Component;
 import javafx.beans.property.SimpleIntegerProperty;

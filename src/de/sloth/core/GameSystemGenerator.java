@@ -6,7 +6,13 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import de.sloth.component.FocusComp;
-import de.sloth.components.VikingEnemyComp;
+import de.sloth.core.behavior.BCheckForDeath;
+import de.sloth.core.behavior.BControllEnemy;
+import de.sloth.core.behavior.BKillEnemy;
+import de.sloth.core.behavior.BRender;
+import de.sloth.core.behavior.BStartGame;
+import de.sloth.core.component.VikingEnemyComp;
+import de.sloth.core.event.StartGameEvent;
 import de.sloth.hmi.HMICore;
 import de.sloth.neuralNetwork.behavior.BCheckForDeathNN;
 import de.sloth.neuralNetwork.behavior.BControllPlayerNN;
@@ -17,6 +23,7 @@ import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.score.behavior.CalcScore;
 import de.sloth.score.event.CalcScoreEvent;
 import de.sloth.spears.behavior.BCollectSpear;
+import de.sloth.spears.behavior.BCollectSpearPoints;
 import de.sloth.spears.behavior.BControllSpear;
 import de.sloth.spears.behavior.BThrowSpear;
 import de.sloth.spears.event.ThrowSpearEvent;
@@ -74,7 +81,7 @@ public class GameSystemGenerator {
 
 	public GameSystem generateStartGameSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue, HMICore gameHMI) {
 		HMIGameSystem startGameSystem = new HMIGameSystem(gameHMI, "startSys", StartGameEvent.class, entityManager, eventQueue);
-		startGameSystem.registerBehavior("Any", new StartGame());
+		startGameSystem.registerBehavior("Any", new BStartGame());
 		return startGameSystem;
 	}
 	
@@ -92,10 +99,10 @@ public class GameSystemGenerator {
 	
 	public GameSystem generateCollisionSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		CollisionHandleSystem collSystem = new CollisionHandleSystem("collSys", CollisionEvent.class, entityManager, eventQueue);
-		collSystem.registerCollisionBehavior(FocusComp.class, FlyingComp.class, new CollectSpearPoints());
+		collSystem.registerCollisionBehavior(FocusComp.class, FlyingComp.class, new BCollectSpearPoints());
 		collSystem.registerCollisionBehavior(FlyingComp.class, FocusComp.class, new DamagePlayer());
 		collSystem.registerCollisionBehavior(VikingEnemyComp.class, VikingEnemyComp.class, new Deglitch());
-		collSystem.registerCollisionBehavior(FlyingComp.class, VikingEnemyComp.class, new KillEnemy());
+		collSystem.registerCollisionBehavior(FlyingComp.class, VikingEnemyComp.class, new BKillEnemy());
 		collSystem.registerCollisionBehavior(FlyingComp.class, FlyingComp.class, new Despawn());
 		return collSystem;
 	}
@@ -103,7 +110,7 @@ public class GameSystemGenerator {
 	public GameSystem generateRenderSystem(IEntityManagement entityManager, HMICore gameHMI, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		HMIGameSystem renderSystem = new HMIGameSystem(gameHMI, "renderSys", null, entityManager, eventQueue);
 		renderSystem.setActive(true);
-		renderSystem.registerBehavior("Any", new Render(maxX, maxY));
+		renderSystem.registerBehavior("Any", new BRender(maxX, maxY));
 		return renderSystem;
 	}
 
@@ -140,7 +147,7 @@ public class GameSystemGenerator {
 	
 	public GameSystem generateEnemyControllSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem enemyControllSystem = new GameSystem("enemyCtrl", null, entityManager, eventQueue);
-		enemyControllSystem.registerBehavior("Any", new ControllEnemy());
+		enemyControllSystem.registerBehavior("Any", new BControllEnemy());
 		return enemyControllSystem;
 	}
 	
@@ -159,7 +166,7 @@ public class GameSystemGenerator {
 	public GameSystem generateEndConditionSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem endConditionSystem = new GameSystem("endCondition", null, entityManager, eventQueue);
-		endConditionSystem.registerBehavior("Any", new CheckForDeath());
+		endConditionSystem.registerBehavior("Any", new BCheckForDeath());
 		endConditionSystem.setActive(false);
 		return endConditionSystem;
 	}

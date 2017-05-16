@@ -1,4 +1,4 @@
-package de.sloth.core;
+package de.sloth.core.behavior;
 
 import de.sloth.component.HealthComp;
 import de.sloth.entity.Entity;
@@ -6,7 +6,7 @@ import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
-public class CheckForDeath implements IBehavior {
+public class BCheckForDeath implements IBehavior {
 
 	
 	@Override

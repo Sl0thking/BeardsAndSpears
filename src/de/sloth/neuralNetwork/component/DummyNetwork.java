@@ -1,4 +1,4 @@
-package de.sloth.components;
+package de.sloth.neuralNetwork.component;
 
 
 public class DummyNetwork implements INeuralNetwork {

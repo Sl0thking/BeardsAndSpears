@@ -1,12 +1,13 @@
-package de.sloth.core;
+package de.sloth.core.behavior;
 
 import java.util.Random;
 
 import de.sloth.component.HealthComp;
 import de.sloth.component.ScoreComp;
-import de.sloth.components.SpearBagComp;
+import de.sloth.core.EntityGenerator;
 import de.sloth.entity.Entity;
 import de.sloth.hmi.PlayerStatusLayer;
+import de.sloth.spears.component.SpearBagComp;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
@@ -16,7 +17,7 @@ import de.sloth.system.game.systemActivation.SystemActivationEvent;
 import de.sloth.system.hmi.HMIGameSystem;
 import javafx.beans.property.SimpleStringProperty;
 
-public class StartGame implements IBehavior {
+public class BStartGame implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {}

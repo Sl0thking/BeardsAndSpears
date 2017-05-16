@@ -1,4 +1,4 @@
-package de.sloth.components;
+package de.sloth.neuralNetwork.component;
 
 import java.util.ArrayList;
 import java.util.List;

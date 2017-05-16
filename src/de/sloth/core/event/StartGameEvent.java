@@ -1,4 +1,4 @@
-package de.sloth.core;
+package de.sloth.core.event;
 
 import de.sloth.system.game.core.GameEvent;
 

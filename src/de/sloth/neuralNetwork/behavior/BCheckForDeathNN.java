@@ -2,11 +2,11 @@ package de.sloth.neuralNetwork.behavior;
 
 import de.sloth.component.HealthComp;
 import de.sloth.component.ScoreComp;
-import de.sloth.components.NeuralNetworkComp;
-import de.sloth.core.ScoreType;
 import de.sloth.entity.Entity;
 import de.sloth.neuralNetwork.EntityManagerNN;
+import de.sloth.neuralNetwork.component.NeuralNetworkComp;
 import de.sloth.neuralNetwork.event.GeneticalEvent;
+import de.sloth.score.component.ScoreType;
 import de.sloth.score.event.CalcScoreEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;

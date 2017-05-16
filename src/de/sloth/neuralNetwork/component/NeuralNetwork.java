@@ -1,8 +1,6 @@
-package de.sloth.components;
+package de.sloth.neuralNetwork.component;
 
-/* REMEMBER THE MAIN, 20% Code 50%Deadcode but 100% REMEMBER THE MAIN */
-
-import de.sloth.components.datatypes.*;
+import de.sloth.neuralNetwork.datatype.*;
 import de.sloth.system.game.core.ConfigLoader;
 
 import java.util.Set;

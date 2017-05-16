@@ -1,8 +1,8 @@
 package de.sloth.spears.behavior;
 
-import de.sloth.components.SpearBagComp;
 import de.sloth.core.EntityGenerator;
 import de.sloth.entity.Entity;
+import de.sloth.spears.component.SpearBagComp;
 import de.sloth.spears.event.ThrowSpearEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;

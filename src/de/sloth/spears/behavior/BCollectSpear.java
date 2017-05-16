@@ -1,6 +1,6 @@
 package de.sloth.spears.behavior;
 
-import de.sloth.components.SpearBagComp;
+import de.sloth.spears.component.SpearBagComp;
 import de.sloth.system.game.collision.CollisionEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;

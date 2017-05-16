@@ -1,4 +1,4 @@
-package de.sloth.components;
+package de.sloth.core.component;
 
 import de.sloth.component.EnemyComp;
 

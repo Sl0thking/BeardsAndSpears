@@ -1,4 +1,4 @@
-package de.sloth.core;
+package de.sloth.core.behavior;
 
 import de.sloth.component.AnimationComp;
 import de.sloth.component.MovableComp;
@@ -10,12 +10,12 @@ import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 import de.sloth.system.hmi.HMIGameSystem;
 
-public class Render implements IBehavior {
+public class BRender implements IBehavior {
 
 	private int screenWidth;
 	private int screenHeight;
 	
-	public Render(int screenWidth, int screenHeight) {
+	public BRender(int screenWidth, int screenHeight) {
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 	}

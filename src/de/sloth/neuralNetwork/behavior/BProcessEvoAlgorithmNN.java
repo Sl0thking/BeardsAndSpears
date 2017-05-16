@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.sloth.components.NetworkSequence;
-import de.sloth.components.NeuralNetworkComp;
-import de.sloth.core.StartGameEvent;
+import de.sloth.core.event.StartGameEvent;
 import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.NetworkSequenceIO;
+import de.sloth.neuralNetwork.component.NetworkSequence;
+import de.sloth.neuralNetwork.component.NeuralNetworkComp;
 import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
