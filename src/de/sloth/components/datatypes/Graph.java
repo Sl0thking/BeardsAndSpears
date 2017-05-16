@@ -8,28 +8,52 @@ public class Graph {
 	private TreeSet<Edge> edgeSet;
 	private TreeMap<String, ArrayList<Node>> hiddenLayer;
 
+	/**
+	 * Initialize the  Graph.
+	 */
 	public Graph(){
 		this.nodeMap = new TreeMap<Node, ArrayList<Edge>>();
 		this.edgeSet = new TreeSet<Edge>();
 		this.hiddenLayer = new TreeMap<String, ArrayList<Node>>();
 	}
-	
+
+    /**
+     * Creates the {@link Node} and add the {@link Node} to the {@code nodeMap}.
+     *
+     * @param nodeId - nodeId as String
+     * @param nodeType - {@link NodeType}
+     */
 	public void addNode(String nodeId, NodeType nodeType){
 		Node node = new Node(nodeId, nodeType);
 		this.addNodeToMap(node);
 	}
-	
+
+    /**
+     * Creates the {@link SigmoidNode} and add the {@link SigmoidNode} to the {@code nodeMap}.
+     * @param nodeId - nodeId as String
+     * @param nodeType - {@link NodeType}
+     */
 	public void addSigmoidNode(String nodeId, NodeType nodeType){
 		SigmoidNode node = new SigmoidNode(nodeId, nodeType);
 		this.addNodeToMap(node);
 	}
 
+    /**
+     * Adds the {@link Node} to the {@code nodeMap} if the {@link Node} don't exist in the {@code nodeMap}.
+     * @param node - {@link Node}
+     */
 	private void addNodeToMap(Node node) {
 		if(!this.nodeMap.containsKey(node)){
 			this.nodeMap.put(node, new ArrayList<Edge>());
 		}
 	}
-	
+
+    /**
+     * Add the {@link Edge} to the {@code edgeSet} and connect it to the {@link Node}s.
+     * @param start_node_id - nodeId as String
+     * @param end_node_id - nodeId as String
+     * @param value - the value of the {@link Node} as double
+     */
 	public void addEdge(String start_node_id, String end_node_id, double value){
 		Node startNode = null;
 		Node endNode = null;
@@ -53,6 +77,12 @@ public class Graph {
 		}
 	}
 
+    /**
+     * Check if the {@link Edge} exists.
+     * @param start_node - {@link Node}
+     * @param end_node - {@link Node}
+     * @return boolean - if the - {@link Edge} exists
+     */
 	private boolean edgeExist(Node start_node, Node end_node) {
 		List<Edge> start_edges = this.getEdgesOfNode(start_node.getNodeId());
 		List<Edge> end_edges = this.getEdgesOfNode(end_node.getNodeId());
@@ -72,7 +102,13 @@ public class Graph {
 		}
         return start_to_end_exists && end_to_start_exists;
 	}
-	
+
+    /**
+     * @deprecated
+     * @param start_node_id - nodeId as String
+     * @param end_node_id - nodeId as String
+     * @param value - the value of the {@link Node} as double
+     */
 	public void modifyEdgeValue(String start_node_id, String end_node_id, double value) {
 		for (List<Edge> edgeList : this.nodeMap.values()) {
 			for (Edge edge : edgeList) {
@@ -83,7 +119,13 @@ public class Graph {
 			}
 		}
 	}
-	
+
+    /**
+     * Returns the {@link Node}
+     * @param nodeId - nodeId as String
+     * @return {@link Node}
+     * @throws Exception if the {@link Node} can't be found.
+     */
 	public Node getNode(String nodeId) throws Exception {
 	    Node node = new Node(nodeId);
 		try {
@@ -103,15 +145,27 @@ public class Graph {
 		}
 		return node;
 	}
-	
+
+    /**
+     * Returns the Nodes.
+     * @return {@link Set} of {@link Node}s
+     */
 	public Set<Node> getNodes() {
 		return this.getNodeMap().keySet();
 	}
 
+    /**
+     * Retunrs the {@code nodeMap}
+     * @return {@link TreeMap}
+     */
 	public TreeMap getNodeMap(){
 		return this.nodeMap;
 	}
-	
+
+    /**
+     * @deprecated
+     * @return double - sum of edge
+     */
 	public double getSumOfEdges() {
 		double edge_sum = 0;
 		for (Edge edge : this.getEdges()) {
@@ -120,18 +174,19 @@ public class Graph {
 		return edge_sum;
 	}
 
+    /**
+     * Returns the {@code edgeSet}
+     * @return {@link Set} of {@link Edge}s
+     */
 	public Set<Edge> getEdges() {
 		return this.edgeSet;
-		/*ArrayList<Edge> edges = new ArrayList<Edge>();
-		for (Node node : this.getNodes()) {
-			for (Edge edge : this.nodeMap.get(node)) {
-				edges.add(edge);
-			}
-		}
-		edges.sort(Edge::compareTo);
-		return edges;*/
 	}
 
+    /**
+     * Returns the {@link Edge}s of the {@link Node}.
+     * @param nodeId - nodeIt as String
+     * @return {@link List} of {@link Edge}s
+     */
 	private List<Edge> getEdgesOfNode(String nodeId) {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for (Node node : this.getNodes()) {
@@ -143,7 +198,12 @@ public class Graph {
 		}
 		return edges;
 	}
-	
+
+    /**
+     * Returns the inputedges of the {@link Node}
+     * @param nodeId - nodeIt as String
+     * @return {@link List} of {@link Edge}s
+     */
 	private List<Edge> getInputEdgesOfNode(String nodeId) {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for (Edge edge : this.getEdges()) {
@@ -155,6 +215,10 @@ public class Graph {
 	}
 
 	@Override
+    /**
+     * Create a Stringrepresentation of the graph.
+     * @return {@link String}
+     */
 	public String toString() {
 		String str = "";
 		for (Node node : this.getNodes()) {
@@ -166,6 +230,12 @@ public class Graph {
 		return str;
 	}
 
+    /**
+     * @deprecated
+     * @param nodeType
+     * @param onlyForward
+     * @return
+     */
 	public String toStringNodeType(NodeType nodeType, boolean onlyForward){
 		String str = "";
 		for (Node node : this.getNodes()) {
@@ -184,6 +254,12 @@ public class Graph {
 		return str;
 	}
 
+    /**
+     * @deprecated
+     * @param edge
+     * @param onlyForward
+     * @return
+     */
 	private String getForwordEdge(Edge edge, boolean onlyForward) {
 		if (onlyForward){
 			if (edge.getEdgeType() == EdgeType.FORWARD) {							
@@ -194,23 +270,41 @@ public class Graph {
 		return edge.toString()+"\n";
 	}
 
+    /**
+     * Add the {@link Node} as inputnode.
+     * @param nodeCount - int for the nodeId
+     */
 	public void addInputNodes(int nodeCount) {
 		for (int i = 0; i < nodeCount; i++) {
 			this.addNode("n_"+(this.nodeMap.size()+1), NodeType.INPUT);
 		}
 	}
-	
+
+    /**
+     * Add the {@link SigmoidNode} as hiddennode.
+     * @param nodeCount - int for the nodeId
+     */
 	public void addHiddenNodes(int nodeCount) {
 		for (int i = 0; i < nodeCount; i++) {
 			this.addSigmoidNode("n_"+(this.nodeMap.size()+1), NodeType.HIDDEN);
 		}
 	}
+
+    /**
+     * Add the {@link SigmoidNode} as outputnode.
+     * @param nodeCount - int for the nodeId
+     */
 	public void addOutputNodes(int nodeCount) {
 		for (int i = 0; i < nodeCount; i++) {
 			this.addSigmoidNode("n_"+(this.nodeMap.size()+1), NodeType.OUTPUT);
 		}
 	}
-	
+
+    /**
+     * Returns all {@link Node}s of the given {@link NodeType}.
+     * @param nodeType - type of the {@link Node} as {@link NodeType}
+     * @return {@link Set} of {@link Node}s
+     */
 	public Set<Node> getNodesOfType(NodeType nodeType){
 		TreeSet<Node> nodes = new TreeSet<Node>();
 		for (Node node : this.getNodes()) {
@@ -221,6 +315,9 @@ public class Graph {
 		return nodes;
 	}
 
+    /**
+     * Connects the inputnodes with the hiddennodes.
+     */
 	public void connectInputNodesToHiddenLayer() {
 		for (Node node : this.getNodesOfType(NodeType.INPUT)) {
 			for (Node othernode : hiddenLayer.firstEntry().getValue()) {
@@ -228,7 +325,10 @@ public class Graph {
 			}
 		}
 	}
-	
+
+    /**
+     * Connects the hiddennodes with the outputnodes.
+     */
 	public void connectHiddenNodesToOutputNodes() {
 		for (Node othernode : this.getNodesOfType(NodeType.OUTPUT)) {
 			for (Node node : hiddenLayer.lastEntry().getValue()) {
@@ -236,7 +336,12 @@ public class Graph {
 			}
 		}
 	}
-	
+
+    /**
+     * Build the layers of the hidden layer and connect them.
+     * @param layerSize - int size of {@link Node}s for each layer
+     * @throws Exception
+     */
 	public void buildHiddenLayers(int layerSize) throws Exception {
 		int layerCount = (int) Math.ceil((double) getNodesOfType(NodeType.HIDDEN).size()/layerSize);
 		Iterator<Node> tempNodes = getNodesOfType(NodeType.HIDDEN).iterator();
@@ -248,7 +353,6 @@ public class Graph {
 					singleLayer.add(tempNodes.next());
 				}
 			}
-			//System.out.println("PUT: layer_"+cur_layer+" "+singleLayer);
 			hiddenLayer.put("layer_"+cur_layer, singleLayer);
 			cur_layer++;
 		}
@@ -256,6 +360,10 @@ public class Graph {
 		
 	}
 
+    /**
+     * Connects the layer of the hiddenlayer with eachother.
+     * @throws Exception - of there is no hiddenlayer to connect.
+     */
 	private void connectHiddenLayer() throws Exception {
 		Iterator<String> tempLayer = hiddenLayer.keySet().iterator();
 		String cur_layer = null;
@@ -281,34 +389,32 @@ public class Graph {
 	}
 	
 	/**
-	 * 
-	 * @param nodeId
+	 * Calculates all input of the {@link Node}
+	 * @param nodeId - nodeId as Strign
 	 * @return sum of edges or 0 if the node have no inputs
 	 * @throws Exception
 	 */
 	public double calculateInputsOfNode(String nodeId) throws Exception{
-		//System.out.println("LOOK FOR INPUTS OF NODE: "+nodeId);
 		List<Edge> edges = this.getInputEdgesOfNode(nodeId);
 		double edgeSum = 0;
 		int edgecount = 0;
 		for (Edge edge : edges) {
 			if (edge.getEdgeType() == EdgeType.FORWARD) {
-				//System.out.println(" "+edge.toString());
-                //edgeSum = (edgeSum + (1/( 1 + Math.pow(Math.E,(-1*(edge.getStartNode().getValue()*edge.getValue()))))))/2;
 				edgeSum += edge.getStartNode().getValue()*edge.getValue();
 				edgecount++;
 			}
 		}
-		/*
-		System.out.println("EDGESUM: "+edgeSum);
-		System.out.println("SIGMOID: "+(double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum, edgecount));
-		System.out.println("SIGMOID / anzahl: "+(double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum, edgecount));*/
 		if (getNode(nodeId).getClass().equals(SigmoidNode.class)){
 			return (double) ((SigmoidNode) getNode(nodeId)).calculateSigmoid(edgeSum, edgecount);
 		}
 		return 0;
 	}
-	
+
+    /**
+     * Returns the output of the graph.
+     * @return {@link List} with the output as double.
+     * @throws Exception
+     */
 	public List<Double> getOutput() throws Exception {
 		Set<Node> nodes = getNodesOfType(NodeType.OUTPUT);
 		Iterator<Node> itNodes = nodes.iterator();
@@ -319,6 +425,10 @@ public class Graph {
 		return output;
 	}
 
+    /**
+     * Returns the {@link SigmoidNode}s.
+     * @return {@link Set} of {@link Node}s
+     */
 	public Set<Node> getSigmoidNodes() {
 		Set<Node> nodes = this.getNodesOfType(NodeType.HIDDEN);
 		nodes.addAll(this.getNodesOfType(NodeType.OUTPUT));

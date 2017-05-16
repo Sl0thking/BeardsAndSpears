@@ -1,5 +1,7 @@
 package de.sloth.components;
 
+/* REMEMBER THE MAIN, 20% Code 50%Deadcode but 100% REMEMBER THE MAIN */
+
 import de.sloth.components.datatypes.*;
 import de.sloth.system.game.core.ConfigLoader;
 
@@ -10,10 +12,19 @@ public class NeuralNetwork implements INeuralNetwork {
 	private Graph graph;
 	private NetworkSequence nnSeq;
 
+    /**
+     * Initialize the NeuralNetwork an create the Graph-object.
+     */
 	public NeuralNetwork() {
 		this.createTestGraph();
 	}
 
+    /**
+     * Create the Graph of the NeuralNetwork.
+     * Initialize the Notes of each Layer and build the meshed graph.
+     *
+     * @return {@link Graph}
+     */
 	public Graph createTestGraph() {
 		graph = new Graph();
 		int maxEnemies = Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "6"));
@@ -29,36 +40,24 @@ public class NeuralNetwork implements INeuralNetwork {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Set<Node> inputs = this.getGraph().getNodesOfType(NodeType.INPUT);
-		for (Node node : inputs) {
-			node.setValue(1);
-		}
-		/*
-		for (Node node : this.getGraph().getNodes()) {
-			System.out.println(node.toString());
-		}
-		System.out.println("-----------TEST----------------");
-		//System.out.println(this.getGraph().toStringNodeType(NodeType.ALL, false));
-		System.out.println("-------------------------------");
-
-		PROCESSINPUT
-		Set<Node> sigmoids = this.graph.getSigmoidNodes();
-		for (Node node : sigmoids) {
-			try {
-				double sigmoidCalculation = this.getGraph().calculateInputsOfNode(node.getNodeId());
-				((SigmoidNode) node).setValue(sigmoidCalculation);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}*/
 		return graph;
 	}
 
+    /**
+     * Returns the Graph.
+     * @return {@link Graph}
+     */
 	public Graph getGraph() {
 		return graph;
 	}
 
 	@Override
+    /**
+     * Runs the NeuralNetwork once.
+     * Call {@code calculateInputsOfNode(nodeId)} for each {@link SigmoidNode} of the graph.
+     *
+     * @return int - output of the graph.
+     */
 	public double processInput() throws Exception {
 		Set<Node> sigmoids = this.graph.getSigmoidNodes();
 		for (Node node : sigmoids) {
@@ -73,6 +72,12 @@ public class NeuralNetwork implements INeuralNetwork {
 	}
 
 	@Override
+    /**
+     * Sets the sequence.
+     * Calculate the bit-array to an integer between -127 und 127 and set the {@code edgeValue}.
+     *
+     * @param nnSeq {@link NeuralNetwork}
+     */
 	public void setSequence(NetworkSequence nnSeq) {
 		this.nnSeq = nnSeq;
 		Set<Edge> edges = this.getGraph().getEdges();
@@ -80,40 +85,45 @@ public class NeuralNetwork implements INeuralNetwork {
 		int i = 0;
 		for (Edge edge : edges) {
             String subseq = (String) seq.subSequence(i * 8, (i + 1) * 8);
-            //System.out.println("SUB: " + subseq);
             boolean positive = true;
             if(subseq.charAt(0)=='0'){
                 positive = false;
             }
             String calcseq = (String) subseq.subSequence(1,8);
-            //System.out.println("CALC: "+calcseq);
-            //System.out.println("INT: "+Integer.parseInt(calcseq, 2));
             double edgeValue = (double) Integer.parseInt(calcseq, 2) / 127;
             if (!positive){
                 edgeValue = -1*edgeValue;
             }
             edge.setValue(edgeValue);
             i++;
-
-		    /*------------------
-            System.out.println((double) Integer.parseInt((String) seq.subSequence(i * 8, (i + 1) * 8), 2));
-			double edgeValue = (((double) Integer.parseInt((String) seq.subSequence(i * 8, (i + 1) * 8), 2) - 127) / 254);
-			edge.setValue(edgeValue);
-			i++;*/
 		}
 	}
 
 	@Override
+    /**
+     * @deprecated
+     */
 	public NetworkSequence getSequence() {
 		return nnSeq;
 	}
 
 	@Override
+    /**
+     * Returns the count of the edges.
+     *
+     * @return int - count of edges
+     */
 	public int getEdgeCount() {
 		return this.getGraph().getEdges().size();
 	}
 
 	@Override
+    /**
+     * Sets the input of the node.
+     *
+     * @param nodeId - the nodeId as String
+     * @param input - value to set for the node
+     */
 	public void setInputOfNode(double input, String nodeID) throws Exception {
 		this.getGraph().getNode(nodeID).setValue(input);
 	}
