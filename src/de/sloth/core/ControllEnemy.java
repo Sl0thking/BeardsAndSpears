@@ -3,9 +3,9 @@ package de.sloth.core;
 import java.util.List;
 import java.util.Random;
 
-import de.sloth.components.SlothEnemyComp;
+import de.sloth.components.VikingEnemyComp;
 import de.sloth.entity.Entity;
-import de.sloth.spearSystems.ThrowSpearEvent;
+import de.sloth.spears.event.ThrowSpearEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
@@ -19,7 +19,7 @@ public class ControllEnemy implements IBehavior {
 	@Override
 	public void execute(GameSystem system) {
 		Random rand = new Random();
-		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), SlothEnemyComp.class);
+		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), VikingEnemyComp.class);
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
 		if(enemies.size() < Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "7"))) {
 			int nenemy = rand.nextInt(200);
@@ -37,7 +37,7 @@ public class ControllEnemy implements IBehavior {
 		}
 		
 		for(Entity enemy : enemies) {
-			SlothEnemyComp seo = (SlothEnemyComp) enemy.getComponent(SlothEnemyComp.class);
+			VikingEnemyComp seo = (VikingEnemyComp) enemy.getComponent(VikingEnemyComp.class);
 			if(seo.getCurrTickDelay() == 0) {
 				Direction direct = Direction.RIGHT;
 				boolean isLeft = rand.nextBoolean();

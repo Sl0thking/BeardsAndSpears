@@ -1,4 +1,4 @@
-package de.sloth.spearSystems;
+package de.sloth.spears.behavior;
 
 import java.util.List;
 
@@ -12,7 +12,17 @@ import de.sloth.system.game.flying.FlyingComp;
 import de.sloth.system.game.moveSystem.Direction;
 import de.sloth.system.game.moveSystem.PossibleMoveEvent;
 
-public class ControllSpear implements IBehavior {
+/**
+ * Behavior of system who works with spears.
+ * Is called every tick and moves spears in the game
+ * in the desired direction.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 16.05.2017
+ *
+ */
+public class BControllSpear implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {

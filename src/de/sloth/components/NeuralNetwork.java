@@ -92,7 +92,6 @@ public class NeuralNetwork implements INeuralNetwork {
             if (!positive){
                 edgeValue = -1*edgeValue;
             }
-            System.out.println("EV: " + edgeValue);
             edge.setValue(edgeValue);
             i++;
 

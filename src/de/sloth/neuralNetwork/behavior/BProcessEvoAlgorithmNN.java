@@ -16,7 +16,7 @@ import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
-public class BEvaluateOrMutate implements IBehavior {
+public class BProcessEvoAlgorithmNN implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {}
@@ -41,20 +41,24 @@ public class BEvaluateOrMutate implements IBehavior {
 			System.out.println("CURRENT GEN: " + nnComp.getCurrGen());
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("Combine and mutate...");
-				Object[] cleaned_eval_gen = new NetworkSequence[nnComp.getSizeOfElite()];
+				//kill weaklings
+				Object[] cleaned_gen = new NetworkSequence[nnComp.getSizeOfElite()];
 				for(int i = nnComp.getMaxPopSize()-nnComp.getSizeOfElite(); i < nnComp.getMaxPopSize(); i++) {
-					cleaned_eval_gen[i-(nnComp.getMaxPopSize()-nnComp.getSizeOfElite())] = eval_gen[i];
+					cleaned_gen[i-(nnComp.getMaxPopSize()-nnComp.getSizeOfElite())] = eval_gen[i];
 				}
-				NetworkSequence[] strongest_gen = {(NetworkSequence) cleaned_eval_gen[0], (NetworkSequence) cleaned_eval_gen[1]};
-				NetworkSequence[] other_gen = new NetworkSequence[cleaned_eval_gen.length-2];
-				for(int i = 2; i < cleaned_eval_gen.length; i++) {
-					other_gen[i-2] = (NetworkSequence) cleaned_eval_gen[i];
+				//breed two strongest sequences
+				NetworkSequence[] strongest_gen = {(NetworkSequence) cleaned_gen[0], (NetworkSequence) cleaned_gen[1]};
+				//other elite sequences are saved
+				NetworkSequence[] other_gen = new NetworkSequence[cleaned_gen.length-2];
+				for(int i = 2; i < cleaned_gen.length; i++) {
+					other_gen[i-2] = (NetworkSequence) cleaned_gen[i];
 				}
-				NetworkSequence[] mutate_gen = mutate(combine(strongest_gen));
+				NetworkSequence[] mutated_gen = mutate(combine(strongest_gen));
 				List<NetworkSequence> newPop = new LinkedList<NetworkSequence>();
-				newPop.addAll(Arrays.asList(mutate_gen));
+				newPop.addAll(Arrays.asList(mutated_gen));
 				newPop.addAll(Arrays.asList(other_gen));
 				newPop.addAll(Arrays.asList(strongest_gen));
+				resetFitness(newPop);
 				nnComp.setPopulation(newPop);
 				System.out.println("Population of Generation: ");
 				for(NetworkSequence nseq : nnComp.getPopulation()) {
@@ -74,11 +78,18 @@ public class BEvaluateOrMutate implements IBehavior {
 		}
 	}
 
+	private void resetFitness(List<NetworkSequence> newPop) {
+		for(NetworkSequence ns : newPop) {
+			ns.setFitnessLvl(-1);
+		}
+	}
+
 	private NetworkSequence[] mutate(NetworkSequence[] comb_gen) {
 		double mutateChance = 0.1f;
 		for(NetworkSequence n : comb_gen) {
 			for(int i = 0; i < n.getSequence().toCharArray().length; i++) {
 				if(Math.random() < mutateChance) {
+					System.out.println("Mutated...");
 					if(n.getSequence().toCharArray()[i] == '0') {
 						n.setSequence(n.getSequence().substring(0, i) + "1" + n.getSequence().substring(i+1, n.getSequence().toCharArray().length));
 					} else {

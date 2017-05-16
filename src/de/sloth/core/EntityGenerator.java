@@ -10,7 +10,7 @@ import de.sloth.component.ScoreComp;
 import de.sloth.component.SpriteComp;
 import de.sloth.components.NeuralNetwork;
 import de.sloth.components.NeuralNetworkComp;
-import de.sloth.components.SlothEnemyComp;
+import de.sloth.components.VikingEnemyComp;
 import de.sloth.components.SpearBagComp;
 import de.sloth.entity.Entity;
 import de.sloth.system.game.core.ConfigLoader;
@@ -56,7 +56,7 @@ public class EntityGenerator {
 		SpriteComp s2Comp = new SpriteComp("Viking_left.png");
 		enemy.addComponent(posComp);
 		enemy.addComponent(s2Comp);
-		enemy.addComponent(new SlothEnemyComp());
+		enemy.addComponent(new VikingEnemyComp());
 		enemy.addComponent(mComp);
 		enemy.addComponent(hitcomp);
 		//enemy.addComponent(aniComp);
@@ -127,7 +127,7 @@ public class EntityGenerator {
 		nnEntity.setId(-1);
 		int population = Integer.parseInt(cl.getConfig("nnMaxPop", "8")); //get from prop in future
 		int generations = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnGenerations", "5"));
-		int sizeOfElite = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnSizeOfElite", "2"));
+		int sizeOfElite = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnSizeOfElite", "6"));
 		NeuralNetworkComp nnComp = new NeuralNetworkComp(generations, new NeuralNetwork(), population, sizeOfElite);
 		nnEntity.addComponent(nnComp);
 		return nnEntity;

@@ -2,11 +2,11 @@ package de.sloth.components;
 
 import de.sloth.component.EnemyComp;
 
-public class SlothEnemyComp extends EnemyComp {
+public class VikingEnemyComp extends EnemyComp {
 	private int tickDelay;
 	private int currTickDelay;
 	
-	public SlothEnemyComp() {
+	public VikingEnemyComp() {
 		tickDelay = 8;
 		currTickDelay = 8;
 	}

@@ -4,12 +4,12 @@ import java.util.List;
 
 import de.sloth.components.INeuralNetwork;
 import de.sloth.components.NeuralNetworkComp;
-import de.sloth.components.SlothEnemyComp;
+import de.sloth.components.VikingEnemyComp;
 import de.sloth.components.SpearBagComp;
 import de.sloth.entity.Entity;
 import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.EntityNNInputConverter;
-import de.sloth.spearSystems.ThrowSpearEvent;
+import de.sloth.spears.event.ThrowSpearEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
@@ -28,7 +28,7 @@ public class BControllPlayerNN implements IBehavior {
 		Entity player = system.getEntityManager().getActivePlayabaleEntity();
 		int maxEnemies = Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "7"));
 		int maxSpears = Integer.valueOf(ConfigLoader.getInstance().getConfig("maxSpears", "7"));
-		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), SlothEnemyComp.class);
+		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), VikingEnemyComp.class);
 		List<Entity> spears = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), FlyingComp.class);
 		if(player != null) {
 			SpearBagComp spComp = (SpearBagComp) player.getComponent(SpearBagComp.class);

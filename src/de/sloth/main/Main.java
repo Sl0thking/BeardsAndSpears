@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameCore;
 import de.sloth.system.game.core.GameEvent;
-import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IEntityManagement;
 import de.sloth.system.hmi.SpriteLoader;
 import de.sloth.components.NetworkSequence;
@@ -55,10 +54,12 @@ public class Main extends Application {
 			if(Boolean.valueOf(ConfigLoader.getInstance().getConfig("isLearning", "true"))) {
 				try {
 					nnComp.setPopulation(NetworkSequenceIO.loadSequences(archiveFile.getAbsolutePath() + "\\teached_population"));
+					
 				} catch (IOException e) {}
+				core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
 			} else {
 				try {
-					NetworkSequence nseq = NetworkSequenceIO.loadSequence(archiveFile.getAbsolutePath() + "\\replay", "ns1.nsq");
+					NetworkSequence nseq = NetworkSequenceIO.loadSequence(archiveFile.getAbsolutePath() + "\\replay", "ns0.nsq");
 					nnComp.addPopulation(nseq);
 					nnComp.getNetwork().setSequence(nseq);
 				} catch (IOException e) {
@@ -67,7 +68,7 @@ public class Main extends Application {
 			}
 			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
-			core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
+			
 		} 
 		core.registerSystem(GameSystemGenerator.getInstance().generateScoreSystem(entityManager, eventQueue));
 		if(showGui) {

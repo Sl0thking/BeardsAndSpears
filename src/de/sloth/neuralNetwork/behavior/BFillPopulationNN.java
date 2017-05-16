@@ -14,7 +14,7 @@ import de.sloth.system.game.core.IBehavior;
 /**
  * Class for initializing a start population
  */
-public class BFillPopulation implements IBehavior{
+public class BFillPopulationNN implements IBehavior{
 
 	private static final int BIT_RANGE = 8;
 	private static final int MAX_BIT_NR = 256;
