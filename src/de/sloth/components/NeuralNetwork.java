@@ -80,11 +80,9 @@ public class NeuralNetwork implements INeuralNetwork {
 		int i = 0;
 		for (Edge edge : edges) {
             String subseq = (String) seq.subSequence(i * 8, (i + 1) * 8);
-            //System.out.println("SUB: "+subseq);
+            //System.out.println("SUB: " + subseq);
             boolean positive = true;
-            if(subseq.charAt(0)=='1'){
-                positive = true;
-            } else {
+            if(subseq.charAt(0)=='0'){
                 positive = false;
             }
             String calcseq = (String) subseq.subSequence(1,8);
@@ -94,6 +92,7 @@ public class NeuralNetwork implements INeuralNetwork {
             if (!positive){
                 edgeValue = -1*edgeValue;
             }
+            System.out.println("EV: " + edgeValue);
             edge.setValue(edgeValue);
             i++;
 

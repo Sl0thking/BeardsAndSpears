@@ -1,4 +1,4 @@
-package de.sloth.core.neuralNetwork;
+package de.sloth.neuralNetwork.behavior;
 
 import de.sloth.core.EntityGenerator;
 import de.sloth.entity.Entity;
@@ -9,7 +9,7 @@ import de.sloth.system.game.core.IBehavior;
 import de.sloth.system.game.moveSystem.Direction;
 import de.sloth.system.game.systemActivation.SystemActivationEvent;
 
-public class StartGameNN implements IBehavior {
+public class BStartGameNN implements IBehavior {
 
 	@Override
 	public void execute(GameSystem arg0) {}

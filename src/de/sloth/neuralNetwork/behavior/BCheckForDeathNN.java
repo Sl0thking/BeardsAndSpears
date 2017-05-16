@@ -1,16 +1,18 @@
-package de.sloth.core.neuralNetwork;
+package de.sloth.neuralNetwork.behavior;
 
 import de.sloth.component.HealthComp;
 import de.sloth.component.ScoreComp;
 import de.sloth.components.NeuralNetworkComp;
-import de.sloth.core.CalcScoreEvent;
 import de.sloth.core.ScoreType;
 import de.sloth.entity.Entity;
+import de.sloth.neuralNetwork.EntityManagerNN;
+import de.sloth.neuralNetwork.event.GeneticalEvent;
+import de.sloth.score.event.CalcScoreEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
-public class CheckForDeathNN implements IBehavior {
+public class BCheckForDeathNN implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {

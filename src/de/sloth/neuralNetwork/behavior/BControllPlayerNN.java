@@ -1,4 +1,4 @@
-package de.sloth.core.neuralNetwork;
+package de.sloth.neuralNetwork.behavior;
 
 import java.util.List;
 
@@ -6,8 +6,9 @@ import de.sloth.components.INeuralNetwork;
 import de.sloth.components.NeuralNetworkComp;
 import de.sloth.components.SlothEnemyComp;
 import de.sloth.components.SpearBagComp;
-import de.sloth.core.EntityToInputConverter;
 import de.sloth.entity.Entity;
+import de.sloth.neuralNetwork.EntityManagerNN;
+import de.sloth.neuralNetwork.EntityNNInputConverter;
 import de.sloth.spearSystems.ThrowSpearEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
@@ -18,7 +19,7 @@ import de.sloth.system.game.flying.FlyingComp;
 import de.sloth.system.game.moveSystem.PossibleMoveEvent;
 import de.sloth.system.game.moveSystem.Direction;
 
-public class ControllPlayerNN implements IBehavior {
+public class BControllPlayerNN implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {
@@ -35,17 +36,17 @@ public class ControllPlayerNN implements IBehavior {
 			double commandValue;
 			try {
 				//System.out.println(((NeuralNetwork) nn).getGraph().toStringNodeType(NodeType.INPUT, false));
-				nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(player), "n_1");
+				nn.setInputOfNode(EntityNNInputConverter.convertEntityToValue(player), "n_1");
 				for(int i = 0; i < maxEnemies; i++) {
 					if(i < enemies.size()) {
-						nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(enemies.get(i)), "n_" + (i+2));
+						nn.setInputOfNode(EntityNNInputConverter.convertEntityToValue(enemies.get(i)), "n_" + (i+2));
 					} else {
 						nn.setInputOfNode(0.0, "n_" + (i+2));
 					}
 				}
 				for(int i = 0; i < maxSpears; i++) {
 					if(i < spears.size()) {
-						nn.setInputOfNode(EntityToInputConverter.convertEntityToValue(spears.get(i)), "n_" + (i+5));
+						nn.setInputOfNode(EntityNNInputConverter.convertEntityToValue(spears.get(i)), "n_" + (i+5));
 					} else {
 						nn.setInputOfNode(0.0, "n_" + (i+5));
 					}

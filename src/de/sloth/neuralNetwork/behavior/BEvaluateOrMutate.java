@@ -1,4 +1,4 @@
-package de.sloth.core.neuralNetwork;
+package de.sloth.neuralNetwork.behavior;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -7,14 +7,16 @@ import java.util.List;
 
 import de.sloth.components.NetworkSequence;
 import de.sloth.components.NeuralNetworkComp;
-import de.sloth.core.NetworkSequenceIO;
 import de.sloth.core.StartGameEvent;
+import de.sloth.neuralNetwork.EntityManagerNN;
+import de.sloth.neuralNetwork.NetworkSequenceIO;
+import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
-public class EvaluateOrMutate implements IBehavior {
+public class BEvaluateOrMutate implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {}
@@ -36,6 +38,7 @@ public class EvaluateOrMutate implements IBehavior {
 		Object[] eval_gen = evaluate(system, nnComp, pop);
 		if(eval_gen != null) {
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
+			System.out.println("CURRENT GEN: " + nnComp.getCurrGen());
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("Combine and mutate...");
 				Object[] cleaned_eval_gen = new NetworkSequence[nnComp.getSizeOfElite()];

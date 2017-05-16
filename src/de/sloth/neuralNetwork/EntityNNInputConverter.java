@@ -1,9 +1,9 @@
-package de.sloth.core;
+package de.sloth.neuralNetwork;
 
 import de.sloth.component.Position3DComp;
 import de.sloth.entity.Entity;
 
-public abstract class EntityToInputConverter {
+public abstract class EntityNNInputConverter {
 	static int canvasWidth = 640;
 	static int canvasHeight = 480;
 	

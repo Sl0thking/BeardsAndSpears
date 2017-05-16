@@ -1,10 +1,12 @@
-package de.sloth.core.neuralNetwork;
+package de.sloth.neuralNetwork.behavior;
 
 import java.util.List;
 import java.util.Random;
 
 import de.sloth.components.NetworkSequence;
 import de.sloth.components.NeuralNetworkComp;
+import de.sloth.neuralNetwork.EntityManagerNN;
+import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
@@ -12,8 +14,11 @@ import de.sloth.system.game.core.IBehavior;
 /**
  * Class for initializing a start population
  */
-public class FillPopulation implements IBehavior{
+public class BFillPopulation implements IBehavior{
 
+	private static final int BIT_RANGE = 8;
+	private static final int MAX_BIT_NR = 256;
+	
 	@Override
 	public void execute(GameSystem arg0) {}
 
@@ -40,9 +45,9 @@ public class FillPopulation implements IBehavior{
 		String sequence = "";
 		Random rand = new Random();
 		for(int i = 0; i < edges; i++) {
-			String edgeSeq = Integer.toBinaryString(rand.nextInt(128));
-			if(edgeSeq.length() < 7) {
-				int zeroFillCount = 7-edgeSeq.length();
+			String edgeSeq = Integer.toBinaryString(rand.nextInt(MAX_BIT_NR));
+			if(edgeSeq.length() < BIT_RANGE) {
+				int zeroFillCount = BIT_RANGE-edgeSeq.length();
 				for(int x = 0; x < zeroFillCount; x++) {
 					edgeSeq = "0" + edgeSeq;
 				}

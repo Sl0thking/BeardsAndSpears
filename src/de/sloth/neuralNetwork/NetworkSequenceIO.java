@@ -1,4 +1,4 @@
-package de.sloth.core;
+package de.sloth.neuralNetwork;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,5 +1,6 @@
-package de.sloth.core;
+package de.sloth.score.event;
 
+import de.sloth.core.ScoreType;
 import de.sloth.system.game.core.GameEvent;
 
 public class CalcScoreEvent extends GameEvent {

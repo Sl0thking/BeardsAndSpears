@@ -1,4 +1,4 @@
-package de.sloth.core.neuralNetwork;
+package de.sloth.neuralNetwork.event;
 
 import de.sloth.system.game.core.GameEvent;
 

@@ -7,13 +7,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import de.sloth.component.FocusComp;
 import de.sloth.components.SlothEnemyComp;
-import de.sloth.core.neuralNetwork.CheckForDeathNN;
-import de.sloth.core.neuralNetwork.ControllPlayerNN;
-import de.sloth.core.neuralNetwork.EvaluateOrMutate;
-import de.sloth.core.neuralNetwork.GeneticalEvent;
-import de.sloth.core.neuralNetwork.FillPopulation;
-import de.sloth.core.neuralNetwork.StartGameNN;
 import de.sloth.hmi.HMICore;
+import de.sloth.neuralNetwork.behavior.BCheckForDeathNN;
+import de.sloth.neuralNetwork.behavior.BControllPlayerNN;
+import de.sloth.neuralNetwork.behavior.BEvaluateOrMutate;
+import de.sloth.neuralNetwork.behavior.BFillPopulation;
+import de.sloth.neuralNetwork.behavior.BStartGameNN;
+import de.sloth.neuralNetwork.event.GeneticalEvent;
+import de.sloth.score.behavior.CalcScore;
+import de.sloth.score.event.CalcScoreEvent;
 import de.sloth.spearSystems.CollectSpear;
 import de.sloth.spearSystems.ControllSpear;
 import de.sloth.spearSystems.ThrowSpear;
@@ -132,7 +134,7 @@ public class GameSystemGenerator {
 	
 	public GameSystem generateControllPlayerNNSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem enemyControllSystem = new GameSystem("ctrlPlayerNN", null, entityManager, eventQueue);
-		enemyControllSystem.registerBehavior("Any", new ControllPlayerNN());
+		enemyControllSystem.registerBehavior("Any", new BControllPlayerNN());
 		return enemyControllSystem;
 	}
 	
@@ -165,7 +167,7 @@ public class GameSystemGenerator {
 	public GameSystem generateEndConditionNNSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem endConditionSystem = new GameSystem("endCondition", null, entityManager, eventQueue);
-		endConditionSystem.registerBehavior("Any", new CheckForDeathNN());
+		endConditionSystem.registerBehavior("Any", new BCheckForDeathNN());
 		endConditionSystem.setActive(false);
 		return endConditionSystem;
 	}
@@ -173,15 +175,15 @@ public class GameSystemGenerator {
 	public GameSystem generateStartGameSystemNN(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem startGameSystem = new GameSystem("startGame", StartGameEvent.class, entityManager, eventQueue);
-		startGameSystem.registerBehavior("Any", new StartGameNN());
+		startGameSystem.registerBehavior("Any", new BStartGameNN());
 		return startGameSystem;
 	}
 	
 	public GameSystem generateGeneticalSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem genSystem = new GameSystem("genSys", GeneticalEvent.class, entityManager, eventQueue);
-		genSystem.registerBehavior("Init", new FillPopulation());
-		genSystem.registerBehavior("CheckOrMutate", new EvaluateOrMutate());
+		genSystem.registerBehavior("Init", new BFillPopulation());
+		genSystem.registerBehavior("CheckOrMutate", new BEvaluateOrMutate());
 		return genSystem;
 	}
 	
