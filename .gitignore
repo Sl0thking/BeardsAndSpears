@@ -60,10 +60,6 @@ BeardsAndSpears.iml
 
 .idea/libraries/slothengine_20170511.xml
 
+bin/
+
 *.class
-
-bin/de/sloth/components/NetworkSequence.class
-
-bin/de/sloth/components/NetworkSequence.class
-
-bin/de/sloth/components/NetworkSequence.class
