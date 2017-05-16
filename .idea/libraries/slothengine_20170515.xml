@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="slothengine_20170515">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/slothengine_20170515.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/slothengine_20170515.jar!/" />
+    </SOURCES>
+  </library>
+</component>
