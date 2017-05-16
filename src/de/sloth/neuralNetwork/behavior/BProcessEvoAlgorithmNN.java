@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import de.sloth.core.event.StartGameEvent;
 import de.sloth.neuralNetwork.EntityManagerNN;
@@ -18,6 +19,9 @@ import de.sloth.system.game.core.IBehavior;
 
 public class BProcessEvoAlgorithmNN implements IBehavior {
 
+	private static final int BIT_RANGE = 8;
+	private static final int MAX_BIT_NR = 256;
+	
 	@Override
 	public void execute(GameSystem system) {}
 	
@@ -35,12 +39,15 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		EntityManagerNN nnMan = (EntityManagerNN) system.getEntityManager();
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class);
 		List<NetworkSequence> pop = nnComp.getPopulation();
+		if(pop.size() == 0) {
+			fillPopulation(nnComp);
+		}
 		Object[] eval_gen = evaluate(system, nnComp, pop);
 		if(eval_gen != null) {
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
-			System.out.println("CURRENT GEN: " + nnComp.getCurrGen());
+			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Process next generation: " + nnComp.getCurrGen());
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
-				System.out.println("Combine and mutate...");
+				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Combine and mutate strongest candidates...");
 				//kill weaklings
 				Object[] cleaned_gen = new NetworkSequence[nnComp.getSizeOfElite()];
 				for(int i = nnComp.getMaxPopSize()-nnComp.getSizeOfElite(); i < nnComp.getMaxPopSize(); i++) {
@@ -60,11 +67,9 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				newPop.addAll(Arrays.asList(strongest_gen));
 				resetFitness(newPop);
 				nnComp.setPopulation(newPop);
-				System.out.println("Population of Generation: ");
-				for(NetworkSequence nseq : nnComp.getPopulation()) {
-					System.out.println(nseq);
-				}
-				system.getEventQueue().add(new GeneticalEvent("Init"));
+				fillPopulation(nnComp);
+				evaluate(system, nnComp, newPop);
+				system.getEventQueue().add(new StartGameEvent());
 			} else {
 				int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
 				NetworkSequenceIO.clearDir(".\\learn_archive_" + learnArchiveID + "\\teached_population");
@@ -75,6 +80,8 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				}
 				System.exit(0);
 			}
+		} else {
+			system.getEventQueue().add(new StartGameEvent());
 		}
 	}
 
@@ -83,13 +90,42 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 			ns.setFitnessLvl(-1);
 		}
 	}
+	
+	private void fillPopulation(NeuralNetworkComp nnComp) {
+		NetworkSequence lastSeq = null;
+		List<NetworkSequence> pop = nnComp.getPopulation();
+		while(nnComp.getMaxPopSize() - nnComp.getPopulation().size() != 0) {
+			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Create random candidate...");
+			lastSeq = generateRandomSequence(nnComp.getNetwork().getEdgeCount());
+			pop.add(lastSeq);
+		}
+	}
+	
+	private NetworkSequence generateRandomSequence(int edges) {
+		String sequence = "";
+		Random rand = new Random();
+		for(int i = 0; i < edges; i++) {
+			String edgeSeq = Integer.toBinaryString(rand.nextInt(MAX_BIT_NR));
+			if(edgeSeq.length() < BIT_RANGE) {
+				int zeroFillCount = BIT_RANGE-edgeSeq.length();
+				for(int x = 0; x < zeroFillCount; x++) {
+					edgeSeq = "0" + edgeSeq;
+				}
+			}
+			sequence = sequence + edgeSeq;
+		}
+		return new NetworkSequence(sequence);
+	}
 
 	private NetworkSequence[] mutate(NetworkSequence[] comb_gen) {
-		double mutateChance = 0.1f;
+		double mutateChance = Double.valueOf(ConfigLoader.getInstance().getConfig("mutateChance", "0.1"));
+		int mutationCount = 0;
+		int sequenceNr = 1;
 		for(NetworkSequence n : comb_gen) {
+			mutationCount = 0;
 			for(int i = 0; i < n.getSequence().toCharArray().length; i++) {
 				if(Math.random() < mutateChance) {
-					System.out.println("Mutated...");
+					mutationCount++;
 					if(n.getSequence().toCharArray()[i] == '0') {
 						n.setSequence(n.getSequence().substring(0, i) + "1" + n.getSequence().substring(i+1, n.getSequence().toCharArray().length));
 					} else {
@@ -97,6 +133,8 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 					}
 				}
 			}
+			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] " + mutationCount + " Mutations happened in sequence " + sequenceNr + "...");
+			sequenceNr++;
 		}
 		return comb_gen;
 	}
@@ -121,7 +159,6 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		if(nnSeq != null) {
 			nnSeq.setFitnessLvl(0);
 			nnComp.getNetwork().setSequence(nnSeq);
-			system.getEventQueue().add(new StartGameEvent());
 			return null;
 		}
 		Object[] generation = pop.toArray();

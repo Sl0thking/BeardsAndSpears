@@ -7,4 +7,8 @@ public class GeneticalEvent extends GameEvent {
 	public GeneticalEvent(String string) {
 		super(string);
 	}
+	
+	public GeneticalEvent() {
+		super();
+	}
 }

@@ -29,34 +29,32 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		//trick for using special config name
 		ConfigLoader.getInstance("valHal.properties");
-		ConcurrentLinkedQueue<GameEvent> eventQueue = new ConcurrentLinkedQueue<GameEvent>();
 		boolean isKiControlled = Boolean.valueOf(ConfigLoader.getInstance().getConfig("isKi", "false"));
 		boolean showGui = Boolean.valueOf(ConfigLoader.getInstance().getConfig("showGui", "false"));
+		boolean isLearning = false;
+		ConcurrentLinkedQueue<GameEvent> eventQueue = new ConcurrentLinkedQueue<GameEvent>();
 		IEntityManagement entityManager = new EntityManager();
 		GameCore core = new GameCore();
 		HMICore gameHmi = null;
-		
 		if(isKiControlled) {
 			entityManager = new EntityManagerNN();
-			//check if is learning mode
 			int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
 			File archiveFile = new File(".\\learn_archive_" + learnArchiveID);
-			ConfigLoader.getInstance().setConfigFile(archiveFile.getAbsolutePath() + "\\learn.properties");
 			if(!archiveFile.exists()) {
 				archiveFile.mkdir();
 				new File(archiveFile.getAbsolutePath() + "\\teached_population").mkdir();
 				new File(archiveFile.getAbsolutePath() + "\\replay").mkdir();
 			}
+			ConfigLoader.getInstance().setConfigFile(archiveFile.getAbsolutePath() + "\\learn.properties");
+			isLearning = Boolean.valueOf(ConfigLoader.getInstance().getConfig("isLearning", "true"));
 			entityManager.addEntity(EntityGenerator.getInstance().generateNNEntity());
 			NeuralNetworkComp nnComp = (NeuralNetworkComp) IEntityManagement.filterEntitiesByComponent(entityManager.getAllEntities(), NeuralNetworkComp.class).get(0).getComponent(NeuralNetworkComp.class);
-			if(Boolean.valueOf(ConfigLoader.getInstance().getConfig("isLearning", "true"))) {
+			
+			if(isLearning) {
 				try {
 					nnComp.setPopulation(NetworkSequenceIO.loadSequences(archiveFile.getAbsolutePath() + "\\teached_population"));
-					
 				} catch (IOException e) {}
-				core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
 			} else {
 				try {
 					NetworkSequence nseq = NetworkSequenceIO.loadSequence(archiveFile.getAbsolutePath() + "\\replay", "ns0.nsq");
@@ -66,11 +64,7 @@ public class Main extends Application {
 					System.exit(0);
 				}
 			}
-			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
-			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
-			
-		} 
-		core.registerSystem(GameSystemGenerator.getInstance().generateScoreSystem(entityManager, eventQueue));
+		}
 		if(showGui) {
 			int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
 			int screenHeight = (int) Screen.getPrimary().getBounds().getHeight(); 
@@ -83,40 +77,73 @@ public class Main extends Application {
 			SpriteLoader spl = SpriteLoader.getInstance(2.0, 32, 32, aniPhases, aniPhaseNames);
 			gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers, spl);
 			Scene scene = new Scene(gameHmi);
-			
 			gameHmi.registerGameInterfaceLayer(new PlayerStatusLayer(eventQueue));
-			core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
-			if(!isKiControlled) {
-				//initate controlls
-				gameHmi.getCanvas().setOnKeyPressed(GameSystemGenerator.getInstance().generateGameControllSystem(entityManager, eventQueue));
-				gameHmi.getCanvas().requestFocus();
-				core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionSystem(entityManager, eventQueue));
-				core.registerSystem(GameSystemGenerator.getInstance().generateBGMSystem(entityManager, eventQueue));
-			}
+	
 			primaryStage.setScene(scene);
 			primaryStage.setFullScreen(true);
 			primaryStage.setFullScreenExitHint("");
 			primaryStage.setAlwaysOnTop(true);
 			primaryStage.show();
 		}
-
-		core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
-		core.registerSystem(GameSystemGenerator.getInstance().generateSystemActivationSystem(entityManager, core, eventQueue));
-		core.registerSystem(GameSystemGenerator.getInstance().generateCheckCollisionSystem(entityManager, eventQueue));
-		core.registerSystem(GameSystemGenerator.getInstance().generateCollisionSystem(entityManager, eventQueue));
-		core.registerSystem(GameSystemGenerator.getInstance().generateMoveSystem(entityManager, eventQueue));
 		
-		core.registerSystem(GameSystemGenerator.getInstance().generateEnemyControllSystem(entityManager, eventQueue));
-		core.registerSystem(GameSystemGenerator.getInstance().generateFlyingSpearSystem(entityManager, eventQueue));
-		core.registerSystem(GameSystemGenerator.getInstance().generateThrowSpearSystem(entityManager, eventQueue));
-		
-		/*for(GameSystem gsys : core.getRegistredSystems()) {
+		if(isKiControlled) {
+			if(isLearning) {
+				core.registerSystem(GameSystemGenerator.getInstance().generateGeneticalSystem(entityManager, eventQueue));
+			}
+			if(showGui) {
+				core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
+			} else {
+				core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystemNN(entityManager, eventQueue));
+			}
+			core.registerSystem(GameSystemGenerator.getInstance().generateControllPlayerNNSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateEnemyControllSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateThrowSpearSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateFlyingSpearSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateMoveSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateCheckCollisionSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateCollisionSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateScoreSystem(entityManager, eventQueue));
+			if(showGui) {
+				core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
+			}
+			core.registerSystem(GameSystemGenerator.getInstance().generateSystemActivationSystem(entityManager, core, eventQueue));
+			if(isLearning) {
+				core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionNNSystem(entityManager, eventQueue));
+			} else {
+				core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionSystem(entityManager, eventQueue));
+			}
+			core.start();
+			if(isLearning) {
+				eventQueue.add(new GeneticalEvent());
+			} else {
+				eventQueue.add(new StartGameEvent());
+			}
+			
+		} else if(showGui) {
+			core.registerSystem(GameSystemGenerator.getInstance().generateStartGameSystem(entityManager, eventQueue, gameHmi));
+			gameHmi.getCanvas().setOnKeyPressed(GameSystemGenerator.getInstance().generateGameControllSystem(entityManager, eventQueue));
+			gameHmi.getCanvas().requestFocus();
+			core.registerSystem(GameSystemGenerator.getInstance().generateEnemyControllSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateThrowSpearSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateFlyingSpearSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateMoveSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateCheckCollisionSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateCollisionSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateScoreSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateBGMSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateSystemActivationSystem(entityManager, core, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionSystem(entityManager, eventQueue));
+			core.start();
+			eventQueue.add(new StartGameEvent());
+		} else {
+			System.out.println("Cannot start player controlled game without gui.");
+			System.exit(1);
+		}
+		/*
+		for(GameSystem gsys : core.getRegistredSystems()) {
 			System.out.println("ACTIVE: " + gsys.getSystemID());
 		}*/
-		
-		core.start();
-		eventQueue.add(new GeneticalEvent("Init"));
-		eventQueue.add(new StartGameEvent());
 	}
 
 	public static void main(String[] args) {

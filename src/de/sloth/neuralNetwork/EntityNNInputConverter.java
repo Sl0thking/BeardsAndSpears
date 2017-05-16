@@ -13,7 +13,7 @@ public abstract class EntityNNInputConverter {
 	}
 	
 	public static double calcAreaCover(int x, int y) {
-		double posArea = x*(y-1) + x;
+		double posArea = canvasWidth*(y-1)+ x;
 		double maxArea = canvasWidth*canvasHeight;
 		return posArea / maxArea;
 	}

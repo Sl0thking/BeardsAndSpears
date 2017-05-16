@@ -23,8 +23,8 @@ public class BCheckForDeathNN implements IBehavior {
 		ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);
 		if(hComp.getLifes() == 0) {
 			nnComp.getNetwork().getSequence().setFitnessLvl(scComp.getScore());
-			System.out.println("SCORED: " + nnComp.getNetwork().getSequence());
-			system.getEventQueue().add(new GeneticalEvent("CheckOrMutate"));
+			System.out.println("[EndConditionSys::CheckForDeathNN] Current candidate scored: " + nnComp.getNetwork().getSequence().getFitnessLvl());
+			system.getEventQueue().add(new GeneticalEvent());
 		} else {
 			system.getEventQueue().add(new CalcScoreEvent(ScoreType.SURVIVAL));
 		}

@@ -3,10 +3,10 @@ package de.sloth.neuralNetwork.behavior;
 import java.util.List;
 import java.util.Random;
 
+import de.sloth.core.event.StartGameEvent;
 import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.component.NetworkSequence;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
-import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
@@ -24,21 +24,19 @@ public class BFillPopulationNN implements IBehavior{
 
 	@Override
 	public void execute(GameSystem system, GameEvent arg1) {
-		System.out.println("TRIGGERED");
 		NetworkSequence lastSeq = null;
 		EntityManagerNN nnMan = (EntityManagerNN) system.getEntityManager();
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class);
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		while(nnComp.getMaxPopSize() - nnComp.getPopulation().size() != 0) {
-			System.out.println("CREATE SEQUENCE...");
+			System.out.println("[GeneticalSysNN::FillPopulation] Create random candidate...");
 			lastSeq = generateRandomSequence(nnComp.getNetwork().getEdgeCount());
 			pop.add(lastSeq);
 		}
-		if(lastSeq != null) {
-			nnComp.getNetwork().setSequence(lastSeq);
-		} else {
-			system.getEventQueue().add(new GeneticalEvent("CheckOrMutate"));
+		if(nnComp.getNetwork().getSequence() == null) {
+			nnComp.getNetwork().setSequence(nnComp.getPopulation().get(0)); 
 		}
+		system.getEventQueue().add(new StartGameEvent());
 	}
 	
 	private NetworkSequence generateRandomSequence(int edges) {

@@ -24,11 +24,8 @@ public class EntityGenerator {
 	private static final int SPRITE_WIDTH = 32;
 	private static final int SPRITE_HEIGHT = 32;
 	private static final double SCALING = 2.;
-	private ConfigLoader cl;
 	
-	private EntityGenerator() {
-		this.cl = ConfigLoader.getInstance("valHal.properties");
-	}
+	private EntityGenerator() {}
 	
 	public static EntityGenerator getInstance() {
 		if(instance == null) {
@@ -64,12 +61,11 @@ public class EntityGenerator {
 	}
 	
 	public Entity generatePlayer() {
-		int playerLife = Integer.parseInt(cl.getConfig("playerLife", "5"));
-		int playerSpears = Integer.parseInt(cl.getConfig("playerSpears", "0"));
-		int playerSpeed = Integer.parseInt(cl.getConfig("playerSpeed", "8"));
-		Entity sloth = new Entity();
-		sloth.setName("Sloth");
-		sloth.setId(-1);
+		int playerLife = Integer.parseInt(ConfigLoader.getInstance().getConfig("playerLife", "5"));
+		int playerSpears = Integer.parseInt(ConfigLoader.getInstance().getConfig("playerSpears", "0"));
+		int playerSpeed = Integer.parseInt(ConfigLoader.getInstance().getConfig("playerSpeed", "8"));
+		Entity playerEntity = new Entity();
+		playerEntity.setId(-1);
 		Position3DComp posComp = new Position3DComp();
 		posComp.setX(300);
 		MovableComp mComp = new MovableComp(playerSpeed, Direction.LEFT);
@@ -81,20 +77,20 @@ public class EntityGenerator {
 		posComp.setY(CANVAS_HEIGTH-(int) (SPRITE_HEIGHT*SCALING));
 		FocusComp fComp = new FocusComp();
 		SpriteComp sComp = new SpriteComp("Viking_sheet");
-		sloth.addComponent(posComp);
-		sloth.addComponent(fComp);
-		sloth.addComponent(sComp);
-		sloth.addComponent(hbox);
-		sloth.addComponent(mComp);
-		sloth.addComponent(heComp);
-		sloth.addComponent(spComp);
-		sloth.addComponent(scoreComp);
-		sloth.addComponent(aniComp);
-		return sloth;
+		playerEntity.addComponent(posComp);
+		playerEntity.addComponent(fComp);
+		playerEntity.addComponent(sComp);
+		playerEntity.addComponent(hbox);
+		playerEntity.addComponent(mComp);
+		playerEntity.addComponent(heComp);
+		playerEntity.addComponent(spComp);
+		playerEntity.addComponent(scoreComp);
+		playerEntity.addComponent(aniComp);
+		return playerEntity;
 	}
 	
 	public Entity generateFlyingSpear(Entity thrower) {
-		int spearSpeed = Integer.parseInt(cl.getConfig("spearSpeed", "4"));
+		int spearSpeed = Integer.parseInt(ConfigLoader.getInstance().getConfig("spearSpeed", "4"));
 		Entity spear = new Entity();
 		spear.setId(-1);
 		Position3DComp throwPosComp = (Position3DComp) thrower.getComponent(Position3DComp.class);
@@ -125,7 +121,7 @@ public class EntityGenerator {
 	public Entity generateNNEntity() {
 		Entity nnEntity = new Entity();
 		nnEntity.setId(-1);
-		int population = Integer.parseInt(cl.getConfig("nnMaxPop", "8")); //get from prop in future
+		int population = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnMaxPop", "8")); //get from prop in future
 		int generations = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnGenerations", "5"));
 		int sizeOfElite = Integer.parseInt(ConfigLoader.getInstance().getConfig("nnSizeOfElite", "6"));
 		NeuralNetworkComp nnComp = new NeuralNetworkComp(generations, new NeuralNetwork(), population, sizeOfElite);

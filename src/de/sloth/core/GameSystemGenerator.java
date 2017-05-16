@@ -18,11 +18,10 @@ import de.sloth.neuralNetwork.behavior.BCheckForDeathNN;
 import de.sloth.neuralNetwork.behavior.BControllPlayerNN;
 import de.sloth.neuralNetwork.behavior.BProcessEvoAlgorithmNN;
 import de.sloth.neuralNetwork.behavior.BFillPopulationNN;
-import de.sloth.neuralNetwork.behavior.BStartGameNN;
+import de.sloth.neuralNetwork.behavior.BStartGameWithoutGUI;
 import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.score.behavior.CalcScore;
 import de.sloth.score.event.CalcScoreEvent;
-import de.sloth.spears.behavior.BCollectSpear;
 import de.sloth.spears.behavior.BCollectSpearPoints;
 import de.sloth.spears.behavior.BControllSpear;
 import de.sloth.spears.behavior.BThrowSpear;
@@ -182,15 +181,14 @@ public class GameSystemGenerator {
 	public GameSystem generateStartGameSystemNN(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem startGameSystem = new GameSystem("startGame", StartGameEvent.class, entityManager, eventQueue);
-		startGameSystem.registerBehavior("Any", new BStartGameNN());
+		startGameSystem.registerBehavior("Any", new BStartGameWithoutGUI());
 		return startGameSystem;
 	}
 	
 	public GameSystem generateGeneticalSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem genSystem = new GameSystem("genSys", GeneticalEvent.class, entityManager, eventQueue);
-		genSystem.registerBehavior("Init", new BFillPopulationNN());
-		genSystem.registerBehavior("CheckOrMutate", new BProcessEvoAlgorithmNN());
+		genSystem.registerBehavior("Any", new BProcessEvoAlgorithmNN());
 		return genSystem;
 	}
 	
