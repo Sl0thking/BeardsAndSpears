@@ -128,7 +128,10 @@ public class EntityManager implements IEntityManagement {
 		} 
 		
 		if(pos != null) {
-			this.chunkLists.get(this.getChunkIndex(pos)).add(entity);
+			List<Entity> chunkList = this.chunkLists.get(this.getChunkIndex(pos));
+			if(chunkList != null) {
+				chunkList.add(entity);
+			}
 		}
 		
 		if(pos == null && fComp == null) {
