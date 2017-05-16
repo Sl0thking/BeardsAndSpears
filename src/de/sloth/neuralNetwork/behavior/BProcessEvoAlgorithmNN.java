@@ -45,6 +45,7 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		Object[] eval_gen = evaluate(system, nnComp, pop);
 		if(eval_gen != null) {
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
+			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] " + nnComp.getCurrGen() + " gens / " + nnComp.getGenerations() + " gens");
 			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Process next generation: " + nnComp.getCurrGen());
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Combine and mutate strongest candidates...");
