@@ -79,9 +79,29 @@ public class NeuralNetwork implements INeuralNetwork {
 		String seq = nnSeq.getSequence();
 		int i = 0;
 		for (Edge edge : edges) {
-			double edgeValue = (((double) Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2) - 64) / 127);
+            String subseq = (String) seq.subSequence(i * 8, (i + 1) * 8);
+            //System.out.println("SUB: "+subseq);
+            boolean positive = true;
+            if(subseq.charAt(0)=='1'){
+                positive = true;
+            } else {
+                positive = false;
+            }
+            String calcseq = (String) subseq.subSequence(1,8);
+            //System.out.println("CALC: "+calcseq);
+            //System.out.println("INT: "+Integer.parseInt(calcseq, 2));
+            double edgeValue = (double) Integer.parseInt(calcseq, 2) / 127;
+            if (!positive){
+                edgeValue = -1*edgeValue;
+            }
+            edge.setValue(edgeValue);
+            i++;
+
+		    /*------------------
+            System.out.println((double) Integer.parseInt((String) seq.subSequence(i * 8, (i + 1) * 8), 2));
+			double edgeValue = (((double) Integer.parseInt((String) seq.subSequence(i * 8, (i + 1) * 8), 2) - 127) / 254);
 			edge.setValue(edgeValue);
-			i++;
+			i++;*/
 		}
 	}
 
@@ -99,8 +119,8 @@ public class NeuralNetwork implements INeuralNetwork {
 	public void setInputOfNode(double input, String nodeID) throws Exception {
 		this.getGraph().getNode(nodeID).setValue(input);
 	}
-	/*
-	public static void main(String[] args) {
+
+	/*public static void main(String[] args) {
 		NeuralNetwork controller = new NeuralNetwork();
 		controller.createTestGraph();
 		System.out.println(controller.getEdgeCount());
@@ -116,38 +136,68 @@ public class NeuralNetwork implements INeuralNetwork {
 			System.out.println(edge);
 		}
 
+
 		System.out.println("-----------SEQUENCE---------");
 		NetworkSequence nnSeq = controller.getSequence();
 		System.out.println(nnSeq);
 		controller.setSequence(nnSeq);
 
 		System.out.println("-----------TEST CALCULATION FOR SEQUENCE CALCULATION---------");
-		String seq = "100000011111111111000";
+		String seq = "100000000111111101111000";
 		System.out.println("SEQUENCE: "+seq);
 		int i = 0;
 		System.out.println("-------------------------------------------------------------");
 
-		System.out.println(seq.subSequence(i * 7, (i + 1) * 7));
-		System.out.println(Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2));
-		double edgevalue = (double) Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2) / 127;
-		System.out.println(edgevalue);
-		System.out.println(Integer.toBinaryString((int)(edgevalue*127)));
-		System.out.println("_____");
-
+		i = controller.calc(i, seq);
+        i = controller.calc(i, seq);
+		i = controller.calc(i, seq);
+        String subseq = (String) seq.subSequence(i * 8, (i + 1) * 8);
+        System.out.println("SUB: "+subseq);
+		boolean positive = true;
+		if(subseq.charAt(0)=='1'){
+		    positive = true;
+        } else {
+		    positive = false;
+        }
+        String calcseq = (String) subseq.subSequence(1,8);
+        System.out.println("CALC: "+calcseq);
+        System.out.println(Integer.parseInt(calcseq, 2));
+        edgevalue = (double) Integer.parseInt(calcseq, 2) / 127;
+        System.out.println("PRE+-: "+edgevalue);
+        if (!positive){
+            edgevalue = -1*edgevalue;
+        }
+        /*System.out.println("POST+-: "+edgevalue);
+        System.out.println(Integer.toBinaryString((int)(edgevalue*127)));
+        System.out.println("_____");
 		i++;
-		System.out.println(seq.subSequence(i * 7, (i + 1) * 7));
-		System.out.println(Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2));
-		edgevalue = (double) Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2) / 127;
-		System.out.println(edgevalue);
-		System.out.println(Integer.toBinaryString((int)(edgevalue*127)));
-		System.out.println("_____");
-
-		i++;
-		System.out.println(seq.subSequence(i * 7, (i + 1) * 7));
-		System.out.println(Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2));
-		edgevalue = (double) Integer.parseInt((String) seq.subSequence(i * 7, (i + 1) * 7), 2) / 127;
-		System.out.println(edgevalue);
-		System.out.println(Integer.toBinaryString((int)(edgevalue*127)));
 		System.out.println("-------------------------------------------------------------");
-	}*/
+	}
+
+	private int calc(int i, String seq){
+        String subseq = (String) seq.subSequence(i * 8, (i + 1) * 8);
+        System.out.println("SUB: "+subseq);
+        boolean positive = true;
+        if(subseq.charAt(0)=='1'){
+            positive = true;
+        } else {
+            positive = false;
+        }
+        String calcseq = (String) subseq.subSequence(1,8);
+        System.out.println("CALC: "+calcseq);
+        System.out.println("INT: "+Integer.parseInt(calcseq, 2));
+        double edgevalue = (double) Integer.parseInt(calcseq, 2) / 127;
+        System.out.println("PRE+-: "+edgevalue);
+        if (!positive){
+            edgevalue = -1*edgevalue;
+        }
+        System.out.println("POST+-: "+edgevalue);
+        /*if(edgevalue<0){
+            edgevalue=edgevalue*-1;
+        }
+        System.out.println(Integer.toBinaryString((int)(edgevalue*127)));
+        System.out.println("_____");
+        i++;
+        return i;
+    }*/
 }
