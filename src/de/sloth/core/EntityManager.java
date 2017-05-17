@@ -10,6 +10,13 @@ import de.sloth.component.Position3DComp;
 import de.sloth.entity.Entity;
 import de.sloth.system.game.core.IEntityManagement;
 
+/**
+ * Class for managing internal entity-list
+ *  
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 17.05.2017
+ */
 public class EntityManager implements IEntityManagement {
 	private List<Entity> playableEntities;
 	private Entity activeEntity;
@@ -21,6 +28,9 @@ public class EntityManager implements IEntityManagement {
 	private static final int CHUNK_WIDTH = 640;
 	private static final int CHUNK_HEIGTH = 480;
 	
+	/**
+	 * 
+	 */
 	public EntityManager() {
 		this.playableEntities = new LinkedList<Entity>();
 		this.activeEntity = null;
@@ -54,12 +64,19 @@ public class EntityManager implements IEntityManagement {
 		}
 		return allEntities;
 	}
-
+	
+	/**
+	 * (non-Javadoc)
+	 * @see de.sloth.system.game.core.IEntityManagement#getPlayableEntities()
+	 */
 	@Override
 	public List<Entity> getPlayableEntities() {
 		return this.playableEntities;
 	}
 
+	/**
+	 * @see de.sloth.system.game.core.IEntityManagement#getActivePlayabaleEntity()
+	 */
 	@Override
 	public Entity getActivePlayabaleEntity() {
 		return this.activeEntity;
@@ -84,7 +101,6 @@ public class EntityManager implements IEntityManagement {
 			if(chunkNr % CHUNKS_ROWS < CHUNKS_ROWS ) {
 				chunkRoom.addAll(this.chunkLists.get(chunkNr+CHUNKS_PER_ROW));
 			}
-			
 			return chunkRoom;
 		} else {
 			return new LinkedList<Entity>();
@@ -94,14 +110,8 @@ public class EntityManager implements IEntityManagement {
 	private int getChunkIndex(Position3DComp pos) {
 		int xPos = pos.getX();
 		int yPos = pos.getY();
-		/*System.out.println("XPOS: " + xPos);
-		System.out.println("YPOS: " + yPos);*/
-		
 		int chunkX = (int) xPos / CHUNK_WIDTH;
 		int chunkY = (int) yPos / CHUNK_HEIGTH;
-		/*System.out.println("CHUNK_X: " + chunkX);
-		System.out.println("CHUNK_Y: " + chunkY);
-		System.out.println("TARGET CHUNK: " + chunkX + (CHUNKS_PER_ROW*chunkY));*/
 		return chunkX + (CHUNKS_PER_ROW*chunkY);
 	}
 

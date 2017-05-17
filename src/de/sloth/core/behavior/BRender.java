@@ -39,6 +39,17 @@ public class BRender implements IBehavior {
 						transformedPosY >= 0 && transformedPosY < screenHeight) {
 					if(aniComp != null) {
 						hmiSys.getGameHMI().getCanvas().getLayer(z_c).drawSprite(sprite.getSpritePath() + "_" + mvComp.getDirection().toString().toLowerCase() + ".png_" + aniComp.getAnimationPhase() + "_" + aniComp.getPhaseNr(), transformedPosX, transformedPosY);
+						
+						if(aniComp.getTicksForAnimation() > -1) {
+							aniComp.setTicksForAnimation(aniComp.getTicksForAnimation()-1);
+						}
+						
+						if(aniComp.getTicksForAnimation() == 0) {
+							aniComp.setAnimationPhase(aniComp.getStdAnimationPhase());
+							aniComp.setTicksForNextPhase(15);
+							aniComp.setTicksForAnimation(-1);
+						}
+						
 						aniComp.setTicksForNextPhase(aniComp.getTicksForNextPhase()-1);
 						if(aniComp.getTicksForNextPhase() <= 0) {
 							aniComp.setPhaseNr(aniComp.getPhaseNr()+1);

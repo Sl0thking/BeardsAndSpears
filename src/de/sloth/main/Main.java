@@ -33,6 +33,8 @@ public class Main extends Application {
 		boolean isKiControlled = Boolean.valueOf(ConfigLoader.getInstance().getConfig("isKi", "false"));
 		boolean showGui = Boolean.valueOf(ConfigLoader.getInstance().getConfig("showGui", "false"));
 		boolean isLearning = false;
+
+		String archivePath = ConfigLoader.getInstance().getConfig("archivePath", ".");
 		ConcurrentLinkedQueue<GameEvent> eventQueue = new ConcurrentLinkedQueue<GameEvent>();
 		IEntityManagement entityManager = new EntityManager();
 		GameCore core = new GameCore();
@@ -40,7 +42,7 @@ public class Main extends Application {
 		if(isKiControlled) {
 			entityManager = new EntityManagerNN();
 			int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
-			File archiveFile = new File(".\\learn_archive_" + learnArchiveID);
+			File archiveFile = new File(archivePath + "\\learn_archive_" + learnArchiveID);
 			if(!archiveFile.exists()) {
 				archiveFile.mkdir();
 				new File(archiveFile.getAbsolutePath() + "\\teached_population").mkdir();
@@ -72,7 +74,7 @@ public class Main extends Application {
 			int canvasHeight = 480;
 			int canvasLayers = 4;
 			
-			String[] aniPhaseNames = {"idle"};
+			String[] aniPhaseNames = {"idle", "hit"};
 			int aniPhases = 4;
 			SpriteLoader spl = SpriteLoader.getInstance(2.0, 32, 32, aniPhases, aniPhaseNames);
 			gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers, spl);
@@ -132,6 +134,7 @@ public class Main extends Application {
 			core.registerSystem(GameSystemGenerator.getInstance().generateScoreSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateBGMSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateSoundSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateSystemActivationSystem(entityManager, core, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateEndConditionSystem(entityManager, eventQueue));
 			core.start();

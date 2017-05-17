@@ -17,6 +17,13 @@ import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.flying.FlyingComp;
 import de.sloth.system.game.moveSystem.Direction;
 
+/**
+ * Generator for specific game entities
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 17.05.2017
+ *
+ */
 public class EntityGenerator {
 	private static EntityGenerator instance;
 	private static final int CANVAS_WIDTH = 640;
@@ -34,14 +41,18 @@ public class EntityGenerator {
 		return instance;
 	}
 	
+	/**
+	 * Generate enemy in specific direction (left, middle, right)
+	 * @param direction Direction of spawn
+	 * @return Entity with components needed for an enemy
+	 */
 	public Entity generateEnemy(Direction direction) {
 		Entity enemy = new Entity();
 		enemy.setId(-1);
-		enemy.setName("Viking");
+		enemy.setName("Enemy Viking");
 		Position3DComp posComp = new Position3DComp();
 		MovableComp mComp = new MovableComp(16, Direction.RIGHT);
 		HitboxComp hitcomp = new HitboxComp(32, 32);
-		//AnimationComp aniComp = new AnimationComp("idle", 0, 20);
 		if(direction.equals(Direction.LEFT)) {
 			posComp.setX((int) (SPRITE_WIDTH*SCALING));
 		} else if(direction.equals(Direction.RIGHT)) {
@@ -56,10 +67,13 @@ public class EntityGenerator {
 		enemy.addComponent(new VikingEnemyComp());
 		enemy.addComponent(mComp);
 		enemy.addComponent(hitcomp);
-		//enemy.addComponent(aniComp);
 		return enemy;
 	}
 	
+	/**
+	 * Generate a player entity
+	 * @return Entity with specific components
+	 */
 	public Entity generatePlayer() {
 		int playerLife = Integer.parseInt(ConfigLoader.getInstance().getConfig("playerLife", "5"));
 		int playerSpears = Integer.parseInt(ConfigLoader.getInstance().getConfig("playerSpears", "0"));
@@ -89,6 +103,11 @@ public class EntityGenerator {
 		return playerEntity;
 	}
 	
+	/**
+	 * Generate a entity with spear components
+	 * @param thrower Src of spear spawn
+	 * @return Entity with spear components
+	 */
 	public Entity generateFlyingSpear(Entity thrower) {
 		int spearSpeed = Integer.parseInt(ConfigLoader.getInstance().getConfig("spearSpeed", "4"));
 		Entity spear = new Entity();
@@ -114,10 +133,13 @@ public class EntityGenerator {
 		spear.addComponent(spearPosComp);
 		spear.addComponent(spComp);
 		spear.addComponent(hitbox);
-		return spear; 
-		
+		return spear; 	
 	}
-
+	
+	/**
+	 * Generate neural network entity
+	 * @return Entity with neutal network entities
+	 */
 	public Entity generateNNEntity() {
 		Entity nnEntity = new Entity();
 		nnEntity.setId(-1);

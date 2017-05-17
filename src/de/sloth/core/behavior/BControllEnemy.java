@@ -25,7 +25,6 @@ public class BControllEnemy implements IBehavior {
 		if(enemies.size() < Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "7"))) {
 			int nenemy = rand.nextInt(200);
 			if(nenemy == 0) {
-				
 				Direction direct = Direction.CENTER;
 				int nDirection = rand.nextInt(3);
 				if(nDirection == 0) {
