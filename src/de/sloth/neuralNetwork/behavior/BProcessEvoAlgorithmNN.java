@@ -2,6 +2,8 @@ package de.sloth.neuralNetwork.behavior;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +23,8 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 
 	private static final int BIT_RANGE = 8;
 	private static final int MAX_BIT_NR = 256;
+	private static Date b4_timestamp;
+	private static Date after_timestamp;
 	
 	@Override
 	public void execute(GameSystem system) {}
@@ -45,8 +49,20 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		Object[] eval_gen = evaluate(system, nnComp, pop);
 		if(eval_gen != null) {
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
+			BProcessEvoAlgorithmNN.after_timestamp = new Date();
 			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] " + nnComp.getCurrGen() + " gens / " + nnComp.getGenerations() + " gens");
 			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Process next generation: " + nnComp.getCurrGen());
+			if(BProcessEvoAlgorithmNN.b4_timestamp != null) {
+				long millSec = after_timestamp.getTime() - b4_timestamp.getTime();
+				long millSecOfEntireProcess = millSec * (nnComp.getGenerations() - nnComp.getCurrGen());
+				long sec = millSecOfEntireProcess/1000;
+				long min = sec / 60;
+				long hours = (sec % 60) / 60;
+				
+				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Remaining time " + hours + "h " + min + "min");
+			} else {
+				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Remaining time *h *min");
+			}
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Combine and mutate strongest candidates...");
 				//kill weaklings
@@ -70,6 +86,7 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				nnComp.setPopulation(newPop);
 				fillPopulation(nnComp);
 				evaluate(system, nnComp, newPop);
+				BProcessEvoAlgorithmNN.b4_timestamp = new Date();
 				system.getEventQueue().add(new StartGameEvent());
 			} else {
 				int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
