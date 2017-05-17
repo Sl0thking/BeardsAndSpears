@@ -63,8 +63,8 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 					sec = (BProcessEvoAlgorithmNN.lastRemainingTime + sec) / 2;
 				}
 				BProcessEvoAlgorithmNN.lastRemainingTime = sec;
-				long hours = sec / 360;
-				long min = (sec % 360) / 60;
+				long hours = sec / 3600;
+				long min = (sec % 3600) / 60;
 				
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Remaining time " + hours + "h " + min + "min");
 			} else {
