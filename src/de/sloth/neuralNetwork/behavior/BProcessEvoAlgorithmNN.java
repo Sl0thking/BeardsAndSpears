@@ -61,7 +61,7 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Remaining time " + hours + "h " + min + "min");
 			} else {
-				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Remaining time *h *min");
+				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Beginn calculation of remaining time...");
 			}
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Combine and mutate strongest candidates...");
