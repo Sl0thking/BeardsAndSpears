@@ -25,6 +25,7 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 	private static final int MAX_BIT_NR = 256;
 	private static Date b4_timestamp;
 	private static Date after_timestamp;
+	private static long lastRemainingTime = -1;
 	
 	@Override
 	public void execute(GameSystem system) {}
@@ -56,8 +57,14 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				long millSec = after_timestamp.getTime() - b4_timestamp.getTime();
 				long millSecOfEntireProcess = millSec * (nnComp.getGenerations() - nnComp.getCurrGen());
 				long sec = millSecOfEntireProcess/1000;
-				long min = sec / 60;
-				long hours = (sec % 60) / 60;
+				//calculate average between new and last value
+				//for a more realistic time value
+				if(BProcessEvoAlgorithmNN.lastRemainingTime >= 0) {
+					sec = (BProcessEvoAlgorithmNN.lastRemainingTime + sec) / 2;
+				}
+				BProcessEvoAlgorithmNN.lastRemainingTime = sec;
+				long hours = sec / 360;
+				long min = (sec % 360) / 60;
 				
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Remaining time " + hours + "h " + min + "min");
 			} else {
