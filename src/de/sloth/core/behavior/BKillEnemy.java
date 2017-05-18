@@ -7,6 +7,15 @@ import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.soundSystem.PlaySoundEvent;
 
+/**
+ * Behavior which extends the KillEnemy behavior. 
+ * Calls CalcScore and PlaySound System for their behavior.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 18.05.2017
+ *
+ */
 public class BKillEnemy extends Despawn {
 
 	@Override

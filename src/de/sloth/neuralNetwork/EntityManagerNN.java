@@ -6,6 +6,14 @@ import de.sloth.core.EntityManager;
 import de.sloth.entity.Entity;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
 
+/**
+ * Entity manager specialized for neural networks.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 18.05.2017
+ *
+ */
 public class EntityManagerNN extends EntityManager {
 	private Entity NNInformation;
 

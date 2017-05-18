@@ -11,7 +11,65 @@ import java.util.List;
 
 import de.sloth.neuralNetwork.component.NetworkSequence;
 
+/**
+ * Collection of persistence functions for NetworkSequences.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 18.05.2017
+ *
+ */
 public abstract class NetworkSequenceIO {
+	
+	private static int learnArchiveID;
+	private static File archiveFile;
+	
+	/**
+	 * Returns ArchiveFile
+	 * @return File
+	 */
+	public static File getArchiveFile() {
+		return NetworkSequenceIO.archiveFile;
+	}
+
+	/**
+	 * Saves a snapshot of given population.
+	 * 
+	 * @param pop Population
+	 * @throws IOException
+	 */
+	public static void savePopulationSnapshot(List<NetworkSequence> pop) throws IOException {
+		NetworkSequenceIO.clearDir(NetworkSequenceIO.archiveFile + "\\teached_population");
+		NetworkSequenceIO.saveSequences(NetworkSequenceIO.archiveFile + "\\teached_population", pop);
+	}
+	
+	/**
+	 * Prepare a learn archive for network sequences.
+	 * 
+	 * @param archivePath Path to archive
+	 * @param learnArchiveID ID of archive
+	 * @return archiveFile
+	 */
+	public static File prepareLearnArchive(String archivePath, int learnArchiveID) {
+		NetworkSequenceIO.learnArchiveID = learnArchiveID;
+		File archiveFile = new File(archivePath + "\\learn_archive_" + String.valueOf(learnArchiveID));
+		NetworkSequenceIO.archiveFile = archiveFile;
+		if(!archiveFile.exists()) {
+			archiveFile.mkdir();
+			new File(archiveFile.getAbsolutePath() + "\\teached_population").mkdir();
+			new File(archiveFile.getAbsolutePath() + "\\replay").mkdir();
+		}
+		return archiveFile;
+	}
+	
+	/**
+	 * Save given NetworkSequence.
+	 * 
+	 * @param path
+	 * @param filename
+	 * @param sequence
+	 * @throws IOException
+	 */
 	public static void saveSequence(String path, String filename, NetworkSequence sequence) throws IOException {
 		File targetNetworkFile = new File(path + File.separator + filename);
 		targetNetworkFile.createNewFile();
@@ -24,6 +82,13 @@ public abstract class NetworkSequenceIO {
 		bw.close();
 	}
 	
+	/**
+	 * Load NetworkSequence of name
+	 * @param path
+	 * @param filename
+	 * @return
+	 * @throws IOException
+	 */
 	public static NetworkSequence loadSequence(String path, String filename) throws IOException {
 		File srcNNFile = new File(path + File.separator + filename);
 		BufferedReader br = new BufferedReader(new FileReader(srcNNFile));
@@ -34,6 +99,13 @@ public abstract class NetworkSequenceIO {
 		return ns;
 	}
 	
+	/**
+	 * Load all sequences in a given directory.
+	 * 
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	public static List<NetworkSequence> loadSequences(String path) throws IOException {
 		List<NetworkSequence> nseqs = new LinkedList<NetworkSequence>();
 		File[] files = (new File(path)).listFiles();
@@ -45,10 +117,16 @@ public abstract class NetworkSequenceIO {
 		return nseqs;
 	}
 	
+	/**
+	 * Save a sequence.
+	 * 
+	 * @param path
+	 * @param nseqs
+	 * @throws IOException
+	 */
 	public static void saveSequences(String path, List<NetworkSequence> nseqs) throws IOException {
 		int fid = 0;
 		for(NetworkSequence ns : nseqs) {
-			System.out.println(ns.toString());
 			saveSequence(path, "ns" + fid + ".nsq", ns);
 			fid++;
 		}

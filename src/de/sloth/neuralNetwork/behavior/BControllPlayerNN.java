@@ -52,17 +52,15 @@ public class BControllPlayerNN implements IBehavior {
 					}
 				}
 				commandValue = nn.processInput();
-				//System.out.println("cValue: " + commandValue);
 			} catch (Exception e) {
 				e.printStackTrace();
 				commandValue = 1.0;
-				//System.out.println("cValue: " + commandValue);
 			}
-			if(commandValue <= 0.35) {
+			if(commandValue <= 0.45) {
 				system.getEventQueue().add(new PossibleMoveEvent(Direction.LEFT));
-			} else if(commandValue > 0.25 && commandValue <= 0.35 && spComp.getSpears() > 0) {
+			} else if(commandValue > 0.45 && commandValue <= 0.55 && spComp.getSpears() > 0) {
 				system.getEventQueue().add(new ThrowSpearEvent());
-			} else if(commandValue > 0.65) {
+			} else {
 				system.getEventQueue().add(new PossibleMoveEvent(Direction.RIGHT));
 			}
 		}

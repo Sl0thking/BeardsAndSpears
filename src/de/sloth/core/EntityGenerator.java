@@ -51,7 +51,8 @@ public class EntityGenerator {
 		enemy.setId(-1);
 		enemy.setName("Enemy Viking");
 		Position3DComp posComp = new Position3DComp();
-		MovableComp mComp = new MovableComp(16, Direction.RIGHT);
+		int enemySpeed = Integer.parseInt(ConfigLoader.getInstance().getConfig("enemySpeed", "16"));
+		MovableComp mComp = new MovableComp(enemySpeed, Direction.RIGHT);
 		HitboxComp hitcomp = new HitboxComp(32, 32);
 		if(direction.equals(Direction.LEFT)) {
 			posComp.setX((int) (SPRITE_WIDTH*SCALING));

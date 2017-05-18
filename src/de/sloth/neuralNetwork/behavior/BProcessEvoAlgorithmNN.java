@@ -1,8 +1,8 @@
 package de.sloth.neuralNetwork.behavior;
 
 import java.io.IOException;
+import java.sql.Savepoint;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +13,6 @@ import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.NetworkSequenceIO;
 import de.sloth.neuralNetwork.component.NetworkSequence;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
-import de.sloth.neuralNetwork.event.GeneticalEvent;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
@@ -73,18 +72,21 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Combine and mutate strongest candidates...");
 				//kill weaklings
-				Object[] cleaned_gen = new NetworkSequence[nnComp.getSizeOfElite()];
-				for(int i = nnComp.getMaxPopSize()-nnComp.getSizeOfElite(); i < nnComp.getMaxPopSize(); i++) {
-					cleaned_gen[i-(nnComp.getMaxPopSize()-nnComp.getSizeOfElite())] = eval_gen[i];
+				Object[] elite_gen = new NetworkSequence[nnComp.getSizeOfElite()];
+				//set start index to greater than 0 to ignore the weakest
+				//sequences (evaluate sorts NetworkSequence arrays in ascending order)
+				int startIndex = nnComp.getMaxPopSize()-nnComp.getSizeOfElite();
+				for(int i = startIndex; i < nnComp.getMaxPopSize(); i++) {
+					elite_gen[i-startIndex] = eval_gen[i];
 				}
-				//breed two strongest sequences
-				NetworkSequence[] strongest_gen = {(NetworkSequence) cleaned_gen[0], (NetworkSequence) cleaned_gen[1]};
+				//save the two strongest sequences
+				NetworkSequence[] strongest_gen = {(NetworkSequence) elite_gen[elite_gen.length-1], (NetworkSequence) elite_gen[elite_gen.length-2]};
 				//other elite sequences are saved
-				NetworkSequence[] other_gen = new NetworkSequence[cleaned_gen.length-2];
-				for(int i = 2; i < cleaned_gen.length; i++) {
-					other_gen[i-2] = (NetworkSequence) cleaned_gen[i];
+				NetworkSequence[] other_gen = new NetworkSequence[elite_gen.length-2];
+				for(int i = 0; i < elite_gen.length-2; i++) {
+					other_gen[i] = (NetworkSequence) elite_gen[i];
 				}
-				NetworkSequence[] mutated_gen = mutate(combine(strongest_gen));
+				NetworkSequence[] mutated_gen = mutate(breed(strongest_gen));
 				List<NetworkSequence> newPop = new LinkedList<NetworkSequence>();
 				newPop.addAll(Arrays.asList(mutated_gen));
 				newPop.addAll(Arrays.asList(other_gen));
@@ -94,15 +96,15 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				fillPopulation(nnComp);
 				evaluate(system, nnComp, newPop);
 				BProcessEvoAlgorithmNN.b4_timestamp = new Date();
+				try {
+					NetworkSequenceIO.savePopulationSnapshot(newPop);
+					System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Successfull saved population snapshot under " + NetworkSequenceIO.getArchiveFile());
+				} catch (IOException e) {
+					System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Error with saving a population snapshot. Quit execution.");
+					System.exit(2);
+				}
 				system.getEventQueue().add(new StartGameEvent());
 			} else {
-				int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
-				NetworkSequenceIO.clearDir(".\\learn_archive_" + learnArchiveID + "\\teached_population");
-				try {
-					NetworkSequenceIO.saveSequences(".\\learn_archive_" + learnArchiveID + "\\teached_population", nnComp.getPopulation());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 				System.exit(0);
 			}
 		} else {
@@ -164,7 +166,7 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		return comb_gen;
 	}
 
-	private NetworkSequence[] combine(NetworkSequence[] eval_gen) {
+	private NetworkSequence[] breed(NetworkSequence[] eval_gen) {
 		NetworkSequence n_seq_1 = new NetworkSequence("");
 		NetworkSequence n_seq_2 = new NetworkSequence("");
 		

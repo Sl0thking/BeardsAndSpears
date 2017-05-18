@@ -2,6 +2,14 @@ package de.sloth.core.component;
 
 import de.sloth.component.EnemyComp;
 
+/**
+ * Component for enemy data.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 18.05.2017
+ *
+ */
 public class VikingEnemyComp extends EnemyComp {
 	private int tickDelay;
 	private int currTickDelay;

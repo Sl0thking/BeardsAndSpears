@@ -17,6 +17,15 @@ import de.sloth.system.game.systemActivation.SystemActivationEvent;
 import de.sloth.system.hmi.HMIGameSystem;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Behavior for StartGameSystem. Executes necessary operations
+ * to prepare a new game.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 18.05.2017
+ *
+ */
 public class BStartGame implements IBehavior {
 
 	@Override

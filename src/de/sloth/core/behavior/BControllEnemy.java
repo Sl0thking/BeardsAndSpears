@@ -15,13 +15,19 @@ import de.sloth.system.game.core.IEntityManagement;
 import de.sloth.system.game.moveSystem.Direction;
 import de.sloth.system.game.moveSystem.PossibleMoveEvent;
 
+/**
+ * Behavior to controll enemies on the field.
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 18.05.2017
+ *
+ */
 public class BControllEnemy implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system) {
 		Random rand = new Random();
 		List<Entity> enemies = IEntityManagement.filterEntitiesByComponent(system.getEntityManager().getAllEntities(), VikingEnemyComp.class);
-		Entity player = system.getEntityManager().getActivePlayabaleEntity();
 		if(enemies.size() < Integer.valueOf(ConfigLoader.getInstance().getConfig("maxEnemies", "7"))) {
 			int nenemy = rand.nextInt(200);
 			if(nenemy == 0) {

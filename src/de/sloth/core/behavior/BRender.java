@@ -10,11 +10,25 @@ import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 import de.sloth.system.hmi.HMIGameSystem;
 
+/**
+ * Behavior for RenderSystem. Renders Entities with
+ * specific components.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 18.05.2017
+ *
+ */
 public class BRender implements IBehavior {
 
 	private int screenWidth;
 	private int screenHeight;
 	
+	/**
+	 * Constructor
+	 * @param screenWidth Width of screen
+	 * @param screenHeight Height of screen
+	 */
 	public BRender(int screenWidth, int screenHeight) {
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
@@ -39,7 +53,6 @@ public class BRender implements IBehavior {
 						transformedPosY >= 0 && transformedPosY < screenHeight) {
 					if(aniComp != null) {
 						hmiSys.getGameHMI().getCanvas().getLayer(z_c).drawSprite(sprite.getSpritePath() + "_" + mvComp.getDirection().toString().toLowerCase() + ".png_" + aniComp.getAnimationPhase() + "_" + aniComp.getPhaseNr(), transformedPosX, transformedPosY);
-						
 						if(aniComp.getTicksForAnimation() > -1) {
 							aniComp.setTicksForAnimation(aniComp.getTicksForAnimation()-1);
 						}
@@ -65,6 +78,7 @@ public class BRender implements IBehavior {
 			}
 		}
 	}
+	
 	@Override
 	public void execute(GameSystem system, GameEvent expectedEvent) {}
 }

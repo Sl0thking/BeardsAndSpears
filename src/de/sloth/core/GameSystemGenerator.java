@@ -129,7 +129,7 @@ public class GameSystemGenerator {
 		CollisionHandleSystem collSystem = new CollisionHandleSystem("collSys", CollisionEvent.class, entityManager, eventQueue);
 		collSystem.registerCollisionBehavior(FocusComp.class, FlyingComp.class, new BCollectSpearPoints());
 		collSystem.registerCollisionBehavior(FlyingComp.class, FocusComp.class, new DamagePlayer());
-		collSystem.registerCollisionBehavior(VikingEnemyComp.class, VikingEnemyComp.class, new Deglitch());
+		collSystem.registerCollisionBehavior(VikingEnemyComp.class, VikingEnemyComp.class, new Deglitch(32));
 		collSystem.registerCollisionBehavior(FlyingComp.class, VikingEnemyComp.class, new BKillEnemy());
 		collSystem.registerCollisionBehavior(FlyingComp.class, FlyingComp.class, new Despawn());
 		return collSystem;

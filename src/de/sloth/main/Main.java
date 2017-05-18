@@ -37,17 +37,14 @@ public class Main extends Application {
 		String archivePath = ConfigLoader.getInstance().getConfig("archivePath", ".");
 		ConcurrentLinkedQueue<GameEvent> eventQueue = new ConcurrentLinkedQueue<GameEvent>();
 		IEntityManagement entityManager = new EntityManager();
-		GameCore core = new GameCore();
+		int gameSpeedMod = Integer.parseInt(ConfigLoader.getInstance().getConfig("gameSpeed", "1"));
+		GameCore core = new GameCore(gameSpeedMod);
+		
 		HMICore gameHmi = null;
 		if(isKiControlled) {
 			entityManager = new EntityManagerNN();
 			int learnArchiveID = Integer.valueOf(ConfigLoader.getInstance().getConfig("learnArchiveID", "1"));
-			File archiveFile = new File(archivePath + "\\learn_archive_" + learnArchiveID);
-			if(!archiveFile.exists()) {
-				archiveFile.mkdir();
-				new File(archiveFile.getAbsolutePath() + "\\teached_population").mkdir();
-				new File(archiveFile.getAbsolutePath() + "\\replay").mkdir();
-			}
+			File archiveFile = NetworkSequenceIO.prepareLearnArchive(archivePath, learnArchiveID);
 			ConfigLoader.getInstance().setConfigFile(archiveFile.getAbsolutePath() + "\\learn.properties");
 			isLearning = Boolean.valueOf(ConfigLoader.getInstance().getConfig("isLearning", "true"));
 			entityManager.addEntity(EntityGenerator.getInstance().generateNNEntity());
@@ -56,7 +53,10 @@ public class Main extends Application {
 			if(isLearning) {
 				try {
 					nnComp.setPopulation(NetworkSequenceIO.loadSequences(archiveFile.getAbsolutePath() + "\\teached_population"));
-				} catch (IOException e) {}
+				} catch (IOException e) {
+					System.out.println("[Main::Main] No sequences found in " + archiveFile.getAbsolutePath());
+					System.out.println("[Main::Main] Will generate random new population...");
+				}
 			} else {
 				try {
 					NetworkSequence nseq = NetworkSequenceIO.loadSequence(archiveFile.getAbsolutePath() + "\\replay", "ns0.nsq");
@@ -79,8 +79,9 @@ public class Main extends Application {
 			SpriteLoader spl = SpriteLoader.getInstance(2.0, 32, 32, aniPhases, aniPhaseNames);
 			gameHmi = new HMICore(canvasWidth, canvasHeight, screenWidth, screenHeight, canvasLayers, spl);
 			Scene scene = new Scene(gameHmi);
-			gameHmi.registerGameInterfaceLayer(new PlayerStatusLayer(eventQueue));
-	
+			PlayerStatusLayer pLayer = new PlayerStatusLayer(eventQueue);
+			gameHmi.registerGameInterfaceLayer(pLayer);
+			pLayer.getFPSLabel().textProperty().bind(core.getFpsProperty().asString());
 			primaryStage.setScene(scene);
 			primaryStage.setFullScreen(true);
 			primaryStage.setFullScreenExitHint("");
@@ -140,7 +141,7 @@ public class Main extends Application {
 			core.start();
 			eventQueue.add(new StartGameEvent());
 		} else {
-			System.out.println("Cannot start player controlled game without gui.");
+			System.out.println("[Main::Main] Cannot start player controlled game without gui.");
 			System.exit(1);
 		}
 		/*
