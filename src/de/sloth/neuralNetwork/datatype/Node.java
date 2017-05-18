@@ -128,5 +128,4 @@ public class Node implements Comparable<Node>{
 		}
 		return 1;
 	}
-	
 }
