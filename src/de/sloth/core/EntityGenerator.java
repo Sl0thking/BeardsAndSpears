@@ -71,6 +71,17 @@ public class EntityGenerator {
 		return enemy;
 	}
 	
+	public Entity generateVikingShip() {
+		Entity ship = new Entity();
+		Position3DComp posComp = new Position3DComp();
+		posComp.setX(0);
+		posComp.setY(0);
+		ship.addComponent(posComp);
+		SpriteComp sComp = new SpriteComp("Viking_Ship_small.png");
+		ship.addComponent(sComp);
+		return ship;
+	}
+	
 	/**
 	 * Generate a player entity
 	 * @return Entity with specific components

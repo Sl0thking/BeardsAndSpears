@@ -91,11 +91,6 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				newPop.addAll(Arrays.asList(mutated_gen));
 				newPop.addAll(Arrays.asList(other_gen));
 				newPop.addAll(Arrays.asList(strongest_gen));
-				resetFitness(newPop);
-				nnComp.setPopulation(newPop);
-				fillPopulation(nnComp);
-				evaluate(system, nnComp, newPop);
-				BProcessEvoAlgorithmNN.b4_timestamp = new Date();
 				try {
 					NetworkSequenceIO.savePopulationSnapshot(newPop);
 					System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Successfull saved population snapshot under " + NetworkSequenceIO.getArchiveFile());
@@ -103,6 +98,11 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 					System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Error with saving a population snapshot. Quit execution.");
 					System.exit(2);
 				}
+				nnComp.setPopulation(newPop);
+				resetFitness(newPop);
+				fillPopulation(nnComp);
+				evaluate(system, nnComp, newPop);
+				BProcessEvoAlgorithmNN.b4_timestamp = new Date();
 				system.getEventQueue().add(new StartGameEvent());
 			} else {
 				System.exit(0);

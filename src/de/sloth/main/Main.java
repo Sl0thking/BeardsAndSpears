@@ -33,7 +33,7 @@ public class Main extends Application {
 		boolean isKiControlled = Boolean.valueOf(ConfigLoader.getInstance().getConfig("isKi", "false"));
 		boolean showGui = Boolean.valueOf(ConfigLoader.getInstance().getConfig("showGui", "false"));
 		boolean isLearning = false;
-
+		
 		String archivePath = ConfigLoader.getInstance().getConfig("archivePath", ".");
 		ConcurrentLinkedQueue<GameEvent> eventQueue = new ConcurrentLinkedQueue<GameEvent>();
 		IEntityManagement entityManager = new EntityManager();
@@ -59,11 +59,15 @@ public class Main extends Application {
 				}
 			} else {
 				try {
-					NetworkSequence nseq = NetworkSequenceIO.loadSequence(archiveFile.getAbsolutePath() + "\\replay", "ns0.nsq");
+					NetworkSequence nseq = NetworkSequenceIO.loadReplay(); 
+					if(nseq == null) {
+						System.out.println("[Main::Main] No replay found in " + archiveFile.getAbsolutePath() + File.separator + "replay" );
+						System.exit(2);
+					}
 					nnComp.addPopulation(nseq);
 					nnComp.getNetwork().setSequence(nseq);
 				} catch (IOException e) {
-					System.exit(0);
+					System.exit(2);
 				}
 			}
 		}
@@ -106,6 +110,9 @@ public class Main extends Application {
 			core.registerSystem(GameSystemGenerator.getInstance().generateCheckCollisionSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateCollisionSystem(entityManager, eventQueue));
 			core.registerSystem(GameSystemGenerator.getInstance().generateScoreSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateBGMSystem(entityManager, eventQueue));
+			core.registerSystem(GameSystemGenerator.getInstance().generateSoundSystem(entityManager, eventQueue));
+			
 			if(showGui) {
 				core.registerSystem(GameSystemGenerator.getInstance().generateRenderSystem(entityManager, gameHmi, eventQueue));
 			}

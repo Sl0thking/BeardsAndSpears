@@ -76,8 +76,9 @@ public abstract class NetworkSequenceIO {
 		BufferedWriter bw =  new BufferedWriter(new FileWriter(targetNetworkFile));
 		bw.write(sequence.getSequence());
 		bw.flush();
-		bw.newLine();
-		bw.write(String.valueOf(sequence.getFitnessLvl()));
+		//currently no need to save fitness lvl
+		//bw.newLine();
+		//bw.write(String.valueOf(sequence.getFitnessLvl()));
 		bw.flush();
 		bw.close();
 	}
@@ -94,7 +95,8 @@ public abstract class NetworkSequenceIO {
 		BufferedReader br = new BufferedReader(new FileReader(srcNNFile));
 		NetworkSequence ns = new NetworkSequence("");
 		ns.setSequence(br.readLine());
-		ns.setFitnessLvl(Integer.parseInt(br.readLine()));
+		//Currently no need to load fitnesslvl
+		//ns.setFitnessLvl(Integer.parseInt(br.readLine()));
 		br.close();
 		return ns;
 	}
@@ -127,7 +129,7 @@ public abstract class NetworkSequenceIO {
 	public static void saveSequences(String path, List<NetworkSequence> nseqs) throws IOException {
 		int fid = 0;
 		for(NetworkSequence ns : nseqs) {
-			saveSequence(path, "ns" + fid + ".nsq", ns);
+			saveSequence(path, "ns_f" + ns.getFitnessLvl() + "_" + fid + ".nsq", ns);
 			fid++;
 		}
 	}
@@ -139,5 +141,15 @@ public abstract class NetworkSequenceIO {
 				f.delete();
 			}
 		}
+	}
+
+	public static NetworkSequence loadReplay() throws IOException {
+		File replayDir = new File(archiveFile.getAbsolutePath() + File.separator + "replay");
+		File[] replays = replayDir.listFiles();
+		NetworkSequence ns = null;
+		if(replays.length > 0) {
+			ns = NetworkSequenceIO.loadSequence(replayDir.getAbsolutePath(), replays[0].getName());
+		}
+		return ns;
 	}
 }

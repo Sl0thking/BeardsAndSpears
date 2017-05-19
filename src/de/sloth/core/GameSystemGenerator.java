@@ -171,7 +171,8 @@ public class GameSystemGenerator {
 	 */
 	public GameSystem generateBGMSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem bgmSystem = new GameSystem("bgmSys", null, entityManager, eventQueue);
-		bgmSystem.registerBehavior("Any", new PlayBgm());
+		double bgmVolume = Double.parseDouble(ConfigLoader.getInstance().getConfig("bgmVolume", "0.5"));
+		bgmSystem.registerBehavior("Any", new PlayBgm(bgmVolume));
 		boolean musicOn = Boolean.valueOf(ConfigLoader.getInstance().getConfig("bgm", "true"));
 		bgmSystem.setActive(musicOn);
 		return bgmSystem;
@@ -251,7 +252,9 @@ public class GameSystemGenerator {
 	public GameSystem generateSoundSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem seSystem = new GameSystem("seSys", PlaySoundEvent.class, entityManager, eventQueue);
-		seSystem.registerBehavior("Any", new PlaySound());
+		double seVolume = Double.parseDouble(ConfigLoader.getInstance().getConfig("seVolume", "0.5"));
+		seSystem.registerBehavior("Any", new PlaySound(seVolume));
+		seSystem.setActive(Boolean.parseBoolean(ConfigLoader.getInstance().getConfig("playSE", "true")));
 		return seSystem;
 	}
 }
