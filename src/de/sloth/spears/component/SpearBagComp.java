@@ -3,6 +3,13 @@ package de.sloth.spears.component;
 import de.sloth.component.Component;
 import javafx.beans.property.SimpleIntegerProperty;
 
+/**
+ * Component to save spears in a bag.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 22.05.2017
+ */
 public class SpearBagComp extends Component {
 	private SimpleIntegerProperty spears;
 	
