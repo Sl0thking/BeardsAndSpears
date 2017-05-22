@@ -13,17 +13,20 @@ import de.sloth.core.EntityGenerator;
 import de.sloth.core.EntityManager;
 import de.sloth.core.GameSystemGenerator;
 import de.sloth.core.event.StartGameEvent;
+import de.sloth.hmi.GameStatusLayer;
 import de.sloth.hmi.HMICore;
 import de.sloth.hmi.PlayerStatusLayer;
 import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.NetworkSequenceIO;
-import de.sloth.neuralNetwork.component.NetworkSequence;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
+import de.sloth.neuralNetwork.component.datatype.NetworkSequence;
 import de.sloth.neuralNetwork.event.GeneticalEvent;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
 	
@@ -85,11 +88,22 @@ public class Main extends Application {
 			Scene scene = new Scene(gameHmi);
 			PlayerStatusLayer pLayer = new PlayerStatusLayer(eventQueue);
 			gameHmi.registerGameInterfaceLayer(pLayer);
-			pLayer.getFPSLabel().textProperty().bind(core.getFpsProperty().asString());
+			
+			if(Boolean.parseBoolean(ConfigLoader.getInstance().getConfig("showFPS", "false"))) {
+				GameStatusLayer gsl = new GameStatusLayer(eventQueue);
+				gameHmi.registerGameInterfaceLayer(gsl);
+				gsl.getFPSLabel().textProperty().bind(core.getFpsProperty().asString().concat(" FPS"));
+			}
 			primaryStage.setScene(scene);
 			primaryStage.setFullScreen(true);
 			primaryStage.setFullScreenExitHint("");
 			primaryStage.setAlwaysOnTop(true);
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent arg0) {
+					System.exit(0);
+				}
+			});
 			primaryStage.show();
 		}
 		
@@ -151,10 +165,6 @@ public class Main extends Application {
 			System.out.println("[Main::Main] Cannot start player controlled game without gui.");
 			System.exit(1);
 		}
-		/*
-		for(GameSystem gsys : core.getRegistredSystems()) {
-			System.out.println("ACTIVE: " + gsys.getSystemID());
-		}*/
 	}
 
 	public static void main(String[] args) {

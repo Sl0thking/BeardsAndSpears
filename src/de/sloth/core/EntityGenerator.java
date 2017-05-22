@@ -10,8 +10,8 @@ import de.sloth.component.ScoreComp;
 import de.sloth.component.SpriteComp;
 import de.sloth.core.component.VikingEnemyComp;
 import de.sloth.entity.Entity;
-import de.sloth.neuralNetwork.component.NeuralNetwork;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
+import de.sloth.neuralNetwork.component.datatype.NeuralNetwork;
 import de.sloth.spears.component.SpearBagComp;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.flying.FlyingComp;
@@ -75,9 +75,10 @@ public class EntityGenerator {
 		Entity ship = new Entity();
 		Position3DComp posComp = new Position3DComp();
 		posComp.setX(0);
-		posComp.setY(0);
+		posComp.setY(CANVAS_HEIGTH-1);
+		posComp.setZ(0);
 		ship.addComponent(posComp);
-		SpriteComp sComp = new SpriteComp("Viking_Ship_small.png");
+		SpriteComp sComp = new SpriteComp("Viking_Ship_smaller.png");
 		ship.addComponent(sComp);
 		return ship;
 	}
@@ -100,7 +101,7 @@ public class EntityGenerator {
 		SpearBagComp spComp = new SpearBagComp(playerSpears);
 		ScoreComp scoreComp = new ScoreComp(0);
 		AnimationComp aniComp = new AnimationComp("idle", 0, 15);
-		posComp.setY(CANVAS_HEIGTH-(int) (SPRITE_HEIGHT*SCALING));
+		posComp.setY(CANVAS_HEIGTH - (int) (SPRITE_HEIGHT*SCALING));
 		FocusComp fComp = new FocusComp();
 		SpriteComp sComp = new SpriteComp("Viking_sheet");
 		playerEntity.addComponent(posComp);
@@ -113,6 +114,19 @@ public class EntityGenerator {
 		playerEntity.addComponent(scoreComp);
 		playerEntity.addComponent(aniComp);
 		return playerEntity;
+	}
+	
+	public Entity generateBlockade(int xPos, int yPos, int width, int height) {
+		Entity blockade = new Entity();
+		Position3DComp posComp = new Position3DComp();
+		HitboxComp hitComp = new HitboxComp(width, height);
+		BlockingComp blockComp = new BlockingComp();
+		posComp.setX(xPos);
+		posComp.setY(yPos);
+		blockade.addComponent(posComp);
+		blockade.addComponent(hitComp);
+		blockade.addComponent(blockComp);
+		return blockade;
 	}
 	
 	/**

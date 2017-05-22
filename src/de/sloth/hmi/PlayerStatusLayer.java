@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -22,8 +23,8 @@ import javafx.scene.text.Font;
  * like remaining health or spears.
  * 
  * @author Kevin Jolitz
- * @version 1.0.0
- * @date 18.05.2017
+ * @version 1.0.1
+ * @date 19.05.2017
  *
  */
 public class PlayerStatusLayer extends GameInterfaceLayer {
@@ -31,10 +32,8 @@ public class PlayerStatusLayer extends GameInterfaceLayer {
 	private SimpleIntegerProperty spearsProperty;
 	private SimpleIntegerProperty lifeProperty;
 	private Label scoreLabel;
-	private Label fpsLabel;
 	private HBox lifeBox;
 	private HBox spearBox;
-	private SimpleIntegerProperty fpsProperty;
 	
 	public PlayerStatusLayer(ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		super("psl", eventQueue);
@@ -43,9 +42,6 @@ public class PlayerStatusLayer extends GameInterfaceLayer {
 		this.lifeBox = new HBox();
 		this.spearBox = new HBox();
 		this.scoreLabel = new Label();
-		this.fpsLabel = new Label();
-		this.fpsLabel.setFont(Font.font("Arial", 32));
-		this.fpsLabel.setTextFill(Color.WHITE);
 		this.scoreLabel.setFont(Font.font("Arial Black", 24));
 		this.scoreLabel.setTextFill(Color.FIREBRICK);
 		this.spearsProperty.addListener(new ChangeListener<Number>() {
@@ -69,11 +65,10 @@ public class PlayerStatusLayer extends GameInterfaceLayer {
 		BorderPane constPane = new BorderPane();
 		BorderPane bPane = new BorderPane();
 		BorderPane topPane = new BorderPane();
-		
-		topPane.setLeft(fpsLabel);
-		
-		bPane.setLeft(lifeBox);
-		bPane.setRight(spearBox);
+		VBox vb = new VBox();
+		vb.getChildren().add(spearBox);
+		vb.getChildren().add(lifeBox);
+		bPane.setLeft(vb);
 		topPane.setCenter(scoreLabel);
 		constPane.setBottom(bPane);
 		constPane.setTop(topPane);
@@ -90,11 +85,7 @@ public class PlayerStatusLayer extends GameInterfaceLayer {
 	public SimpleIntegerProperty getSpearProperty() {
 		return this.spearsProperty;
 	}
-	
-	public Label getFPSLabel() {
-		return this.fpsLabel;
-	}
-	
+
 	public Label getScoreLabel() {
 		return scoreLabel;
 	}

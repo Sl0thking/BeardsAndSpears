@@ -1,6 +1,13 @@
-package de.sloth.neuralNetwork.component;
+package de.sloth.neuralNetwork.component.datatype;
 
-
+/**
+ * Dummy for a neural network
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 22.05.2017
+ *
+ */
 public class DummyNetwork implements INeuralNetwork {
 
 	private NetworkSequence nSeq;

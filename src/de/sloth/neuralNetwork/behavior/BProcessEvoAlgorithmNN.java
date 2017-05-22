@@ -1,7 +1,6 @@
 package de.sloth.neuralNetwork.behavior;
 
 import java.io.IOException;
-import java.sql.Savepoint;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -11,13 +10,23 @@ import java.util.Random;
 import de.sloth.core.event.StartGameEvent;
 import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.NetworkSequenceIO;
-import de.sloth.neuralNetwork.component.NetworkSequence;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
+import de.sloth.neuralNetwork.component.datatype.NetworkSequence;
 import de.sloth.system.game.core.ConfigLoader;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
+/**
+ * Behavior for genetical system. 
+ * Rates NetworkSequences and executes a evolutionary algorithm 
+ * to create new generations.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 22.05.2017
+ *
+ */
 public class BProcessEvoAlgorithmNN implements IBehavior {
 
 	private static final int BIT_RANGE = 8;
@@ -44,14 +53,16 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnMan.getNNInformation().getComponent(NeuralNetworkComp.class);
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		if(pop.size() == 0) {
-			fillPopulation(nnComp);
+			fillPopulation(system, nnComp);
 		}
 		Object[] eval_gen = evaluate(system, nnComp, pop);
 		if(eval_gen != null) {
 			nnComp.setCurrGen(nnComp.getCurrGen() + 1);
 			BProcessEvoAlgorithmNN.after_timestamp = new Date();
 			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] " + nnComp.getCurrGen() + " gens / " + nnComp.getGenerations() + " gens");
-			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Process next generation: " + nnComp.getCurrGen());
+			if(!system.isQuiet()) {
+				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Process next generation: " + nnComp.getCurrGen());
+			}
 			if(BProcessEvoAlgorithmNN.b4_timestamp != null) {
 				long millSec = after_timestamp.getTime() - b4_timestamp.getTime();
 				long millSecOfEntireProcess = millSec * (nnComp.getGenerations() - nnComp.getCurrGen());
@@ -70,7 +81,10 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Beginn calculation of remaining time...");
 			}
 			if(nnComp.getCurrGen() < nnComp.getGenerations()) {
-				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Combine and mutate strongest candidates...");
+				if(!system.isQuiet()) {
+					System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Combine and mutate strongest candidates...");
+				}
+				
 				//kill weaklings
 				Object[] elite_gen = new NetworkSequence[nnComp.getSizeOfElite()];
 				//set start index to greater than 0 to ignore the weakest
@@ -86,21 +100,23 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 				for(int i = 0; i < elite_gen.length-2; i++) {
 					other_gen[i] = (NetworkSequence) elite_gen[i];
 				}
-				NetworkSequence[] mutated_gen = mutate(breed(strongest_gen));
+				NetworkSequence[] mutated_gen = mutate(system, breed(strongest_gen));
 				List<NetworkSequence> newPop = new LinkedList<NetworkSequence>();
 				newPop.addAll(Arrays.asList(mutated_gen));
 				newPop.addAll(Arrays.asList(other_gen));
 				newPop.addAll(Arrays.asList(strongest_gen));
 				try {
 					NetworkSequenceIO.savePopulationSnapshot(newPop);
-					System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Successfull saved population snapshot under " + NetworkSequenceIO.getArchiveFile());
+					if(!system.isQuiet()) {
+						System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Successfull saved population snapshot under " + NetworkSequenceIO.getArchiveFile());
+					}
 				} catch (IOException e) {
 					System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Error with saving a population snapshot. Quit execution.");
 					System.exit(2);
 				}
 				nnComp.setPopulation(newPop);
 				resetFitness(newPop);
-				fillPopulation(nnComp);
+				fillPopulation(system, nnComp);
 				evaluate(system, nnComp, newPop);
 				BProcessEvoAlgorithmNN.b4_timestamp = new Date();
 				system.getEventQueue().add(new StartGameEvent());
@@ -112,22 +128,38 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		}
 	}
 
+	/**
+	 * Resets fitness levels of a given population
+	 * @param newPop source population
+	 */
 	private void resetFitness(List<NetworkSequence> newPop) {
 		for(NetworkSequence ns : newPop) {
 			ns.setFitnessLvl(-1);
 		}
 	}
 	
-	private void fillPopulation(NeuralNetworkComp nnComp) {
+	/**
+	 * Fills up a given population 
+	 * @param sys reference to executing system
+	 * @param nnComp Component which contains the neural network
+	 */
+	private void fillPopulation(GameSystem sys, NeuralNetworkComp nnComp) {
 		NetworkSequence lastSeq = null;
 		List<NetworkSequence> pop = nnComp.getPopulation();
 		while(nnComp.getMaxPopSize() - nnComp.getPopulation().size() != 0) {
-			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Create random candidate...");
+			if(!sys.isQuiet()) {
+				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] Create random candidate...");
+			}
 			lastSeq = generateRandomSequence(nnComp.getNetwork().getEdgeCount());
 			pop.add(lastSeq);
 		}
 	}
 	
+	/**
+	 * Generates a random NetworkSequence
+	 * @param edges number of edges
+	 * @return new random sequence
+	 */
 	private NetworkSequence generateRandomSequence(int edges) {
 		String sequence = "";
 		Random rand = new Random();
@@ -144,7 +176,13 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		return new NetworkSequence(sequence);
 	}
 
-	private NetworkSequence[] mutate(NetworkSequence[] comb_gen) {
+	/**
+	 * Randomly mutates given sequences
+	 * @param sys reference to executing system
+	 * @param comb_gen array of source sequences
+	 * @return mutated sequences
+	 */
+	private NetworkSequence[] mutate(GameSystem sys, NetworkSequence[] comb_gen) {
 		double mutateChance = Double.valueOf(ConfigLoader.getInstance().getConfig("mutateChance", "0.1"));
 		int mutationCount = 0;
 		int sequenceNr = 1;
@@ -160,12 +198,19 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 					}
 				}
 			}
-			System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] " + mutationCount + " Mutations happened in sequence " + sequenceNr + "...");
+			if(!sys.isQuiet()) {
+				System.out.println("[GeneticalSysNN::ProcessEvoAlgorithm] " + mutationCount + " Mutations happened in sequence " + sequenceNr + "...");
+			}
 			sequenceNr++;
 		}
 		return comb_gen;
 	}
-
+	
+	/**
+	 * Breeding of two sequences in a given array
+	 * @param eval_gen src array
+	 * @return array of children
+	 */
 	private NetworkSequence[] breed(NetworkSequence[] eval_gen) {
 		NetworkSequence n_seq_1 = new NetworkSequence("");
 		NetworkSequence n_seq_2 = new NetworkSequence("");
@@ -178,8 +223,12 @@ public class BProcessEvoAlgorithmNN implements IBehavior {
 		return c_ns;
 	}
 
-	/*
-	 * Evaluate given population
+	/**
+	 * Evaluation of a given population
+	 * @param system reference to running system
+	 * @param nnComp component which contains the neural network
+	 * @param pop given population
+	 * @return null or a sorted array 
 	 */
 	private Object[] evaluate(GameSystem system, NeuralNetworkComp nnComp, List<NetworkSequence> pop) {
 		NetworkSequence nnSeq = getUnratedSequence(pop);

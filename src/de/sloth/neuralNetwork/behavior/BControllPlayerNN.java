@@ -6,8 +6,8 @@ import de.sloth.core.component.VikingEnemyComp;
 import de.sloth.entity.Entity;
 import de.sloth.neuralNetwork.EntityManagerNN;
 import de.sloth.neuralNetwork.EntityNNInputConverter;
-import de.sloth.neuralNetwork.component.INeuralNetwork;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
+import de.sloth.neuralNetwork.component.datatype.INeuralNetwork;
 import de.sloth.spears.component.SpearBagComp;
 import de.sloth.spears.event.ThrowSpearEvent;
 import de.sloth.system.game.core.ConfigLoader;
@@ -19,6 +19,14 @@ import de.sloth.system.game.flying.FlyingComp;
 import de.sloth.system.game.moveSystem.PossibleMoveEvent;
 import de.sloth.system.game.moveSystem.Direction;
 
+/**
+ * Behavior for control of playable entity in neural network mode.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 20.05.2017
+ *
+ */
 public class BControllPlayerNN implements IBehavior {
 
 	@Override

@@ -5,6 +5,13 @@ import de.sloth.score.event.CalcScoreEvent;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 
+/**
+ * Behavior to get points when collecting spears.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 22.05.2017
+ */
 public class BCollectSpearPoints extends BCollectSpear {
 
 	@Override

@@ -4,7 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.sloth.component.Component;
+import de.sloth.neuralNetwork.component.datatype.INeuralNetwork;
+import de.sloth.neuralNetwork.component.datatype.NetworkSequence;
 
+/**
+ * Component which contains the neural network and settings for it
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 22.05.2017
+ *
+ */
 public class NeuralNetworkComp extends Component {
 	private int generations;
 	private int currGen;

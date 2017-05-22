@@ -11,6 +11,14 @@ import de.sloth.system.game.core.IBehavior;
 import de.sloth.system.game.moveSystem.Direction;
 import de.sloth.system.game.systemActivation.SystemActivationEvent;
 
+/**
+ * Behavior to start the game without the gui
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 22.05.2017
+ *
+ */
 public class BStartGameWithoutGUI implements IBehavior {
 
 	@Override
@@ -18,7 +26,9 @@ public class BStartGameWithoutGUI implements IBehavior {
 
 	@Override
 	public void execute(GameSystem system, GameEvent arg1) {
-		System.out.println("[StartGameSys::StartGameWithoutGUI] Start game round...");
+		if(!system.isQuiet()) {
+			System.out.println("[StartGameSys::StartGameWithoutGUI] Start game round...");
+		}
 		system.getEntityManager().clear();
 		Entity player = EntityGenerator.getInstance().generatePlayer();
 		system.getEntityManager().addEntity(player);
@@ -35,7 +45,5 @@ public class BStartGameWithoutGUI implements IBehavior {
 			system.getEntityManager().addEntity(EntityGenerator.getInstance().generateEnemy(direct));
 		}
 		system.getEventQueue().add(new SystemActivationEvent("single", "endCondition", true));
-
 	}
-
 }

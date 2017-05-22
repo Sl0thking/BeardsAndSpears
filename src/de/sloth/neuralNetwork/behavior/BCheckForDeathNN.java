@@ -12,6 +12,14 @@ import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
+/**
+ * System to check player death in neural network mode.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 20.05.2017
+ *
+ */
 public class BCheckForDeathNN implements IBehavior {
 
 	@Override
@@ -21,9 +29,11 @@ public class BCheckForDeathNN implements IBehavior {
 		HealthComp hComp = (HealthComp) player.getComponent(HealthComp.class);
 		NeuralNetworkComp nnComp = (NeuralNetworkComp) nnEntity.getComponent(NeuralNetworkComp.class);
 		ScoreComp scComp = (ScoreComp) player.getComponent(ScoreComp.class);
-		if(hComp.getLifes() == 0) {
+		if(hComp.getLifes() <= 0) {
 			nnComp.getNetwork().getSequence().setFitnessLvl(scComp.getScore());
-			System.out.println("[EndConditionSys::CheckForDeathNN] Current candidate scored: " + nnComp.getNetwork().getSequence().getFitnessLvl());
+			if(!system.isQuiet()) {
+				System.out.println("[EndConditionSys::CheckForDeathNN] Current candidate scored: " + nnComp.getNetwork().getSequence().getFitnessLvl());
+			}
 			system.getEventQueue().add(new GeneticalEvent());
 		} else {
 			system.getEventQueue().add(new CalcScoreEvent(ScoreType.SURVIVAL));

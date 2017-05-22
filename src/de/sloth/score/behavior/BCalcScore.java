@@ -8,7 +8,14 @@ import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
-public class CalcScore implements IBehavior {
+/**
+ * Behavior of score calculation for the score system.
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 22.05.2017
+ */
+public class BCalcScore implements IBehavior {
 
 	private int calls = 0;
 	

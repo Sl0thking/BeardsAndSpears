@@ -5,14 +5,18 @@ import java.util.Random;
 
 import de.sloth.core.event.StartGameEvent;
 import de.sloth.neuralNetwork.EntityManagerNN;
-import de.sloth.neuralNetwork.component.NetworkSequence;
 import de.sloth.neuralNetwork.component.NeuralNetworkComp;
+import de.sloth.neuralNetwork.component.datatype.NetworkSequence;
 import de.sloth.system.game.core.GameEvent;
 import de.sloth.system.game.core.GameSystem;
 import de.sloth.system.game.core.IBehavior;
 
 /**
- * Class for initializing a start population
+ * Behavior for initializing a start population
+ * 
+ * @author Kevin Jolitz
+ * @version 1.0.0
+ * @date 20.05.2017
  */
 public class BFillPopulationNN implements IBehavior{
 
@@ -39,6 +43,11 @@ public class BFillPopulationNN implements IBehavior{
 		system.getEventQueue().add(new StartGameEvent());
 	}
 	
+	/**
+	 * Generates a random network sequence
+	 * @param edges
+	 * @return
+	 */
 	private NetworkSequence generateRandomSequence(int edges) {
 		String sequence = "";
 		Random rand = new Random();

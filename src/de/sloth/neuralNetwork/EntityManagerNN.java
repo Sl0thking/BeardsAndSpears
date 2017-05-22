@@ -45,7 +45,4 @@ public class EntityManagerNN extends EntityManager {
 	public void setNNInformation(Entity nNInformation) {
 		NNInformation = nNInformation;
 	}
-	
-	
-	
 }

@@ -1,4 +1,4 @@
-package de.sloth.neuralNetwork.datatype;
+package de.sloth.neuralNetwork.component.datatype;
 
 public class Node implements Comparable<Node>{
 	

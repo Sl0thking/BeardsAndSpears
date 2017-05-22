@@ -1,4 +1,4 @@
-package de.sloth.neuralNetwork.datatype;
+package de.sloth.neuralNetwork.component.datatype;
 
 /**
  * Type of the edge.

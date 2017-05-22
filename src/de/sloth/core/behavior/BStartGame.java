@@ -46,6 +46,7 @@ public class BStartGame implements IBehavior {
 		psl.getSpearProperty().bind(spComp.getSpearProperty());
 		psl.getScoreLabel().textProperty().bind(new SimpleStringProperty("Ruhm ").concat(scoreComp.getScoreProperty().asString()));
 		system.getEntityManager().addEntity(player);
+		
 		int enemyCount = Integer.parseInt(ConfigLoader.getInstance().getConfig("enemyCount", "3"));
 		Random rand = new Random();
 		for(int i = 0; i < enemyCount; i++) {

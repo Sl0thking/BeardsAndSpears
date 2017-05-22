@@ -1,6 +1,5 @@
-package de.sloth.neuralNetwork.component;
+package de.sloth.neuralNetwork.component.datatype;
 
-import de.sloth.neuralNetwork.datatype.*;
 import de.sloth.system.game.core.ConfigLoader;
 
 import java.util.Set;

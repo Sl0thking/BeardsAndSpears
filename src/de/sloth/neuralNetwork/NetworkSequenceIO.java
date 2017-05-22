@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.sloth.neuralNetwork.component.NetworkSequence;
+import de.sloth.neuralNetwork.component.datatype.NetworkSequence;
 
 /**
  * Collection of persistence functions for NetworkSequences.
@@ -21,7 +21,6 @@ import de.sloth.neuralNetwork.component.NetworkSequence;
  */
 public abstract class NetworkSequenceIO {
 	
-	private static int learnArchiveID;
 	private static File archiveFile;
 	
 	/**
@@ -51,7 +50,6 @@ public abstract class NetworkSequenceIO {
 	 * @return archiveFile
 	 */
 	public static File prepareLearnArchive(String archivePath, int learnArchiveID) {
-		NetworkSequenceIO.learnArchiveID = learnArchiveID;
 		File archiveFile = new File(archivePath + "\\learn_archive_" + String.valueOf(learnArchiveID));
 		NetworkSequenceIO.archiveFile = archiveFile;
 		if(!archiveFile.exists()) {
@@ -65,9 +63,9 @@ public abstract class NetworkSequenceIO {
 	/**
 	 * Save given NetworkSequence.
 	 * 
-	 * @param path
-	 * @param filename
-	 * @param sequence
+	 * @param path Path to target dir.
+	 * @param filename Name of file
+	 * @param sequence NetworkSequence to save
 	 * @throws IOException
 	 */
 	public static void saveSequence(String path, String filename, NetworkSequence sequence) throws IOException {
@@ -76,16 +74,12 @@ public abstract class NetworkSequenceIO {
 		BufferedWriter bw =  new BufferedWriter(new FileWriter(targetNetworkFile));
 		bw.write(sequence.getSequence());
 		bw.flush();
-		//currently no need to save fitness lvl
-		//bw.newLine();
-		//bw.write(String.valueOf(sequence.getFitnessLvl()));
-		bw.flush();
 		bw.close();
 	}
 	
 	/**
 	 * Load NetworkSequence of name
-	 * @param path
+	 * @param path Path to saved sequence
 	 * @param filename
 	 * @return
 	 * @throws IOException
@@ -95,8 +89,6 @@ public abstract class NetworkSequenceIO {
 		BufferedReader br = new BufferedReader(new FileReader(srcNNFile));
 		NetworkSequence ns = new NetworkSequence("");
 		ns.setSequence(br.readLine());
-		//Currently no need to load fitnesslvl
-		//ns.setFitnessLvl(Integer.parseInt(br.readLine()));
 		br.close();
 		return ns;
 	}
@@ -134,6 +126,11 @@ public abstract class NetworkSequenceIO {
 		}
 	}
 	
+	/**
+	 * Deletes all sequences of a given directory.
+	 * 
+	 * @param path
+	 */
 	public static void clearDir(String path) {
 		File[] files = (new File(path)).listFiles();
 		for(File f : files) {
@@ -142,7 +139,12 @@ public abstract class NetworkSequenceIO {
 			}
 		}
 	}
-
+	
+	/**
+	 * Returns the first network sequence in replay directory 
+	 * @return
+	 * @throws IOException
+	 */
 	public static NetworkSequence loadReplay() throws IOException {
 		File replayDir = new File(archiveFile.getAbsolutePath() + File.separator + "replay");
 		File[] replays = replayDir.listFiles();

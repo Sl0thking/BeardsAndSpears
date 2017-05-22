@@ -19,7 +19,7 @@ import de.sloth.neuralNetwork.behavior.BControllPlayerNN;
 import de.sloth.neuralNetwork.behavior.BProcessEvoAlgorithmNN;
 import de.sloth.neuralNetwork.behavior.BStartGameWithoutGUI;
 import de.sloth.neuralNetwork.event.GeneticalEvent;
-import de.sloth.score.behavior.CalcScore;
+import de.sloth.score.behavior.BCalcScore;
 import de.sloth.score.event.CalcScoreEvent;
 import de.sloth.spears.behavior.BCollectSpearPoints;
 import de.sloth.spears.behavior.BControllSpear;
@@ -82,49 +82,25 @@ public class GameSystemGenerator {
 		GameSystemGenerator.maxY = 480; 
 		GameSystemGenerator.maxX = 640; 
 	}
-	/**
-	 * 
-	 * @param entityManager
-	 * @param eventQueue
-	 * @param gameHMI
-	 * @return
-	 */
+
 	public GameSystem generateStartGameSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue, HMICore gameHMI) {
 		HMIGameSystem startGameSystem = new HMIGameSystem(gameHMI, "startSys", StartGameEvent.class, entityManager, eventQueue);
 		startGameSystem.registerBehavior("Any", new BStartGame());
 		return startGameSystem;
 	}
-	
-	/**
-	 * 
-	 * @param entityManager
-	 * @param eventQueue
-	 * @return
-	 */
+
 	public GameSystem generateMoveSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem moveSystem = new GameSystem("moveSys", MoveEvent.class, entityManager, eventQueue);
 		moveSystem.registerBehavior("Any", new Move((GameSystemGenerator.maxX-((int) GameSystemGenerator.scaling*GameSystemGenerator.spriteWidth)), (GameSystemGenerator.maxY-((int) GameSystemGenerator.scaling*GameSystemGenerator.spriteHeight))));
 		return moveSystem;
 	}
 	
-	/**
-	 * 
-	 * @param entityManager
-	 * @param eventQueue
-	 * @return
-	 */
 	public GameSystem generateCheckCollisionSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem collSystem = new GameSystem("checkCollSys", PossibleMoveEvent.class, entityManager, eventQueue);
 		collSystem.registerBehavior("Any", new CheckCollision());
 		return collSystem;
 	}
-	
-	/**
-	 * 
-	 * @param entityManager
-	 * @param eventQueue
-	 * @return
-	 */
+
 	public GameSystem generateCollisionSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		CollisionHandleSystem collSystem = new CollisionHandleSystem("collSys", CollisionEvent.class, entityManager, eventQueue);
 		collSystem.registerCollisionBehavior(FocusComp.class, FlyingComp.class, new BCollectSpearPoints());
@@ -135,13 +111,6 @@ public class GameSystemGenerator {
 		return collSystem;
 	}
 	
-	/**
-	 * 
-	 * @param entityManager
-	 * @param gameHMI
-	 * @param eventQueue
-	 * @return
-	 */
 	public GameSystem generateRenderSystem(IEntityManagement entityManager, HMICore gameHMI, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		HMIGameSystem renderSystem = new HMIGameSystem(gameHMI, "renderSys", null, entityManager, eventQueue);
 		renderSystem.setActive(true);
@@ -149,13 +118,6 @@ public class GameSystemGenerator {
 		return renderSystem;
 	}
 
-	/**
-	 * 
-	 * @param entityManager
-	 * @param core
-	 * @param eventQueue
-	 * @return
-	 */
 	public GameSystem generateSystemActivationSystem(IEntityManagement entityManager, GameCore core, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameCoreSystem systemActivationSystem = new GameCoreSystem("sysActiveSys", SystemActivationEvent.class, entityManager, eventQueue, core);
 		systemActivationSystem.registerBehavior("single", new ActivateSystem());
@@ -163,12 +125,6 @@ public class GameSystemGenerator {
 		return systemActivationSystem;
 	}
 	
-	/**
-	 * 
-	 * @param entityManager
-	 * @param eventQueue
-	 * @return
-	 */
 	public GameSystem generateBGMSystem(IEntityManagement entityManager, ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem bgmSystem = new GameSystem("bgmSys", null, entityManager, eventQueue);
 		double bgmVolume = Double.parseDouble(ConfigLoader.getInstance().getConfig("bgmVolume", "0.5"));
@@ -224,6 +180,7 @@ public class GameSystemGenerator {
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem endConditionSystem = new GameSystem("endCondition", null, entityManager, eventQueue);
 		endConditionSystem.registerBehavior("Any", new BCheckForDeathNN());
+		endConditionSystem.setQuiet(Boolean.parseBoolean(ConfigLoader.getInstance().getConfig("isQuiet", "true")));
 		endConditionSystem.setActive(false);
 		return endConditionSystem;
 	}
@@ -231,6 +188,7 @@ public class GameSystemGenerator {
 	public GameSystem generateStartGameSystemNN(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem startGameSystem = new GameSystem("startGame", StartGameEvent.class, entityManager, eventQueue);
+		startGameSystem.setQuiet(Boolean.parseBoolean(ConfigLoader.getInstance().getConfig("isQuiet", "true")));
 		startGameSystem.registerBehavior("Any", new BStartGameWithoutGUI());
 		return startGameSystem;
 	}
@@ -238,6 +196,7 @@ public class GameSystemGenerator {
 	public GameSystem generateGeneticalSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem genSystem = new GameSystem("genSys", GeneticalEvent.class, entityManager, eventQueue);
+		genSystem.setQuiet(Boolean.parseBoolean(ConfigLoader.getInstance().getConfig("isQuiet", "true")));
 		genSystem.registerBehavior("Any", new BProcessEvoAlgorithmNN());
 		return genSystem;
 	}
@@ -245,7 +204,7 @@ public class GameSystemGenerator {
 	public GameSystem generateScoreSystem(IEntityManagement entityManager,
 			ConcurrentLinkedQueue<GameEvent> eventQueue) {
 		GameSystem scoreSystem = new GameSystem("scoreSys", CalcScoreEvent.class, entityManager, eventQueue);
-		scoreSystem.registerBehavior("CalcScore", new CalcScore());
+		scoreSystem.registerBehavior("CalcScore", new BCalcScore());
 		return scoreSystem;
 	}
 

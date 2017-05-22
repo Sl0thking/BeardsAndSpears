@@ -43,7 +43,7 @@ public class BRender implements IBehavior {
 			SpriteComp sprite = (SpriteComp) renderingEntity.getComponent(SpriteComp.class);
 			AnimationComp aniComp = (AnimationComp) renderingEntity.getComponent(AnimationComp.class);
 			MovableComp mvComp = (MovableComp) renderingEntity.getComponent(MovableComp.class);
-			if(comp != null) {
+			if(comp != null && sprite != null) {
 				int z_c = comp.getZ();
 				int y_c = comp.getY();
 				int x_c = comp.getX();
