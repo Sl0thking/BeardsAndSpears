@@ -1,5 +1,5 @@
 ##################################################################################################
-##					BEARDS & SPEARS						##
+##										BEARDS & SPEARS											##
 ##################################################################################################
 
 
@@ -76,6 +76,10 @@ jeweiligen Kante zu zuweisen.
 
 
 ##### 4. Konfigurieren & Testen #######################################################################
+Erstellt wurde dieses Projekt in Eclipse (Luna Service Release 2, 4.4.2), mit der JRE 1.8.0_111. Daher 
+sollte dieses auch möglichst in Eclipse geöffnet und ausgeführt werden. Eine Exe oder executable
+Jar steht noch nicht zur Verfügung.
+
 Sämtliche Spieleinstellungen werden über Zwei Konfigurationsdateien vorgenommen:
 valHal.properties
 learn.properties
