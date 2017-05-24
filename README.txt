@@ -6,7 +6,8 @@
 ##### 0. Inhaltsverzeichnis ######################################################################
 	1. Das Spiel
 	2. Architektur des Spiels und Neuronalen Netzes
-	3. Konfigurieren und Testen
+	3. Funktionsübersicht
+	4. Konfigurieren und Testen
 
 
 
@@ -53,11 +54,11 @@ Komponente. Mit dem darin enthaltenen Graphen und anderen notwendigen Werten änd
 Aufbau des aktiven Graphen, bewertet dessen Einstellung anhand des gesammelten Ruhms, züchtet neue 
 Einstellungen und mutiert diese anschließend.
 
-Die Kanten in dem Neuronalen Netz haben einen Wert zwischen Null und Eins. Um diese Einstellung/Werte
-zu speichern und es sehr einfach mutierbar zu machen, entschiedenen wir uns für eine binäre Darstellung,
-nachfolgend genannt Netzwerksequenz. Das Netz kann diese verarbeiten und übernehmen. Diese bestehen aus 
-einer langen Zeichenkette von Nullen und Einsen. Der Graph kann diese Zeichenfolge auslesen und 
-verarbeiten. Jeder Kantenwert ist durch Acht-Bit (Acht Zeichen) kodiert:
+Die Kanten in dem Neuronalen Netz haben einen Wert zwischen Null und Eins. Um diese 
+Einstellung/Werte zu speichern und es sehr einfach mutierbar zu machen, entschiedenen wir uns für eine
+binäre Darstellung, nachfolgend genannt Netzwerksequenz. Das Netz kann diese verarbeiten und übernehmen. 
+Diese bestehen aus einer langen Zeichenkette von Nullen und Einsen. Der Graph kann diese Zeichenfolge 
+auslesen und verarbeiten. Jeder Kantenwert ist durch Acht-Bit (Acht Zeichen) kodiert:
 MSB : Vorzeichen
 Stelle 2^7 - 2^1 : Zahl zwischen 0 und 127
 Der Graph liest jeweils Acht Zeichen der Kette aus, wandelt es in die entsprechende Dezimalpräsentation 
@@ -65,7 +66,16 @@ um und teilt die daraus resultierende Zahl durch 127, um so eine Zahl zwischen N
 jeweiligen Kante zu zuweisen.
 
 
-##### 3. Konfigurieren & Testen #######################################################################
+
+##### 3. Funktionsübersicht ###########################################################################
+-Manuelles Spielen
+-selbstgeschriebenes Neuronales Netz, welches über einen genetischen Algorithmus das Spiel lernt (mit/ohne GUI)
+-Erstellung / Verwaltung von Lernarchiven
+-Speichern und Laden von Netzwerksequenzen / Generationen
+
+
+
+##### 4. Konfigurieren & Testen #######################################################################
 Sämtliche Spieleinstellungen werden über Zwei Konfigurationsdateien vorgenommen:
 valHal.properties
 learn.properties
@@ -73,8 +83,8 @@ learn.properties
 Die erstere Konfigurationsdatei ist für grundlegende Einstellungen oder Konfigurationen für das Spielen 
 ohne Netz ausgelegt. Wichtig sind hier vor allem folgende Einstellungen:
 archivePath=.		//Gibt den Pfad zum Lernarchiv an
-isKi=false		//Spielt das Netz oder man selber?
-gameSpeed=1		//Erhöht die Spielgeschwindigkeit ums xfache. Wichtig zum lernen.
+isKi=false			//Spielt das Netz oder man selber?
+gameSpeed=1			//Erhöht die Spielgeschwindigkeit ums xfache. Wichtig zum lernen.
 learnArchiveID=666	//Gibt die IDs des Archivs an.
 showGui=true		//Zeigt die GUI an oder nicht.
 
@@ -88,10 +98,10 @@ aber weitere die vor allem das Lernen des Netzes betreffen:
 mutateChance=0.05	//Chance, dass ein einzelnes Bit der Netzwerksequenz "kippt" beim Mutationsprozess
 nnGenerations=500	//Anzahl der Generationen, die beim lernen durchlaufen werden sollen
 isQuiet=true		//Beschränkt die Konsolenausgabe auf ein Minimum 
-nnMaxPop=16		//Maximale Population pro Generation
+nnMaxPop=16			//Maximale Population pro Generation
 isLearning=true		//Gibt an ob gelernt werden soll oder eine Sequenz im replay mode wiedergeben werden soll
 nnSizeOfElite=14	//Gibt an, wieviele Generation nach der Bewertung überleben sollen 
-			//(in diesem Beispiel würden 14 überleben und 2 sterben, da die max Population auf 16 gesetzt ist.)
+					//(in diesem Beispiel würden 14 überleben und 2 sterben, da die max Population auf 16 gesetzt ist.)
 
 Wenn Einstellungen doppelt vorkommen, haben während des Lernen die Einstellungen des Lernarchivs den Vorzug. 
 Einzelne Sequenzen können in den Replay Ordner verschoben werden und betrachtet werden. Lediglich die Option 
